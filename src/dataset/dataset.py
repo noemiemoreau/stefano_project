@@ -29,7 +29,9 @@ class ImageDataset(Dataset):
         fn = self.df.iloc[idx][self.fn_col]
         image = np.load(fn)
         image = image[self.which_channels, :, :]
+        print(image.shape)
         image = tensor(image, dtype=float32)
+        print(image.shape)
         if self.transform != None:
             image = self.transform(image)
         lbl = self.df.iloc[idx][self.lbl_col]
