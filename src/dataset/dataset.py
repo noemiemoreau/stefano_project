@@ -14,13 +14,13 @@ class ImageDataset(Dataset):
     """
 
     def __init__(self, df, fn_col = None, lbl_col = None, transform = None, return_filename = False
-                 , which_channels = [list(range(14))]):
+                 , which_channels = [list(range(4))]):
         self.df = df
         self.fn_col = fn_col if fn_col != None else df.columns[0]
         self.lbl_col = lbl_col if lbl_col != None else df.columns[1]
         self.transform = transform
         self.return_filename = return_filename
-        self.which_channels = 3
+        self.which_channels = which_channels
 
     def __len__(self):
         return self.df.shape[0]
