@@ -61,24 +61,24 @@ def validate_step(val_loader, model, criterion):
     val_phase_results = {'Loss': val_epoch_loss, 'Accuracy' : acc.item()} 
     return val_phase_results
 
-def main_worker(proc_index, args):
+def main_worker(args):
 
     torch.manual_seed(0)
     torch.cuda.manual_seed_all(0)
 
-    if torch.cuda.is_available():
-        torch.cuda.set_device(proc_index)
-    else:
-        raise RuntimeError('CUDA not available!')
+    # if torch.cuda.is_available():
+    #     torch.cuda.set_device(proc_index)
+    # else:
+    #     raise RuntimeError('CUDA not available!')
 
-    if dist.is_nccl_available():
-        dist.init_process_group(
-            backend = 'nccl',
-            world_size = args.gpus,
-            rank = proc_index
-        )
-    else:
-        raise RuntimeError('NCCL backend not available!')
+    # if dist.is_nccl_available():
+    #     dist.init_process_group(
+    #         backend = 'nccl',
+    #         world_size = args.gpus,
+    #         rank = proc_index
+    #     )
+    # else:
+    #     raise RuntimeError('NCCL backend not available!')
 
     if args.task == 'ihc-score':
         args.num_classes = 4
@@ -94,7 +94,7 @@ def main_worker(proc_index, args):
     else:
         raise ValueError('Model should be resnet34 or abmil')  
 
-    model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
+    # model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
 
     train_transform = transforms.Compose([
         transforms.Resize((args.img_size, args.img_size)),
@@ -108,8 +108,8 @@ def main_worker(proc_index, args):
     if args.weighted_sampler_label == 'None':
         args.weighted_sampler_label = args.task
     weights = calculate_weights(torch.tensor(train_df[args.weighted_sampler_label].values))
-    train_sampler = DistributedWeightedSampler(weights, num_replicas=args.gpus, rank=proc_index, shuffle=True)
-    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True, sampler=train_sampler)
+    # train_sampler = DistributedWeightedSampler(weights, num_replicas=args.gpus, rank=proc_index, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
 
     if args.val_csv != 'None':
         val_transform = transforms.Compose([
@@ -118,8 +118,8 @@ def main_worker(proc_index, args):
         ])
         val_df = pd.read_csv(args.val_csv)
         val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform)
-        val_sampler = DistributedSampler(val_dataset, num_replicas=args.gpus, rank=proc_index, shuffle=True)
-        val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True, sampler=val_sampler)
+        # val_sampler = DistributedSampler(val_dataset, num_replicas=args.gpus, rank=proc_index, shuffle=True)
+        val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
     
     optimizer = torch.optim.Adam(model.parameters(), lr = args.learning_rate, weight_decay=1e-8)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', factor=args.scheduler_factor, patience=args.scheduler_patience, min_lr=1e-15)
@@ -179,4 +179,5 @@ if __name__ == '__main__':
     os.makedirs(args.checkpoints_dir, exist_ok = True)
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ['MASTER_PORT'] = args.master_port
-    mp.spawn(main_worker, nprocs=args.gpus, args=(args,))
+    main_worker(args=args)
+    # mp.spawn(main_worker, nprocs=args.gpus, args=(args,))
