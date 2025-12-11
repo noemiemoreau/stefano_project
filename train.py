@@ -100,7 +100,7 @@ def main_worker(args):
         transforms.Resize((args.img_size, args.img_size)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
-        transforms.ToTensor(),
+        # transforms.ToTensor(),
     ])
 
     train_df = pd.read_csv(args.train_csv)
