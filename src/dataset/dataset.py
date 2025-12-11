@@ -20,7 +20,7 @@ class ImageDataset(Dataset):
         self.lbl_col = lbl_col if lbl_col != None else df.columns[1]
         self.transform = transform
         self.return_filename = return_filename
-        self.which_channels = which_channels
+        self.which_channels = 3
 
     def __len__(self):
         return self.df.shape[0]
