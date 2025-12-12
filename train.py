@@ -17,11 +17,17 @@ from src.models import ResnetABMIL
 
 import wandb
 
+from sklearn.metrics import f1_score, confusion_matrix
+
 def train_step(train_loader, model, criterion, optimizer):
     model.train()
     training_epoch_loss = 0
+    acc = 0
+    targets = []
+    outputs = []
     for i, batch in enumerate(train_loader):
         img_tensor, target = batch[0].cuda(), batch[1].cuda()
+        targets.append(target)
         output = model(img_tensor)
         if isinstance(output, (tuple, list)):
             output = output[0]
@@ -30,9 +36,19 @@ def train_step(train_loader, model, criterion, optimizer):
         loss.backward()
         optimizer.step()
         training_epoch_loss += loss.item()
-    
+        predicted_classes = torch.max(output, dim=1)[1]
+        outputs.append(predicted_classes)
+        acc += (predicted_classes == target).sum()
+
+    true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
+    predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
+    ccmm = confusion_matrix(true_vals, predicts)
+
     training_phase_results = {
         'Loss': training_epoch_loss/( (i+1) ),
+        'Accuracy': acc.item() / tests,
+        'F1': f1_score(true_vals, predicts),
+        'confusion_matrix': ccmm,
         'Learning rate': optimizer.param_groups[0]['lr']}
 
     return training_phase_results
@@ -42,17 +58,34 @@ def validate_step(val_loader, model, criterion):
     model.eval()
     val_epoch_loss = torch.tensor([0.0]).cuda()
     acc = torch.tensor([0.0]).cuda()
-
+    targets = []
+    outputs = []
     with torch.no_grad():
         for i, batch in enumerate(val_loader):
             img_tensor, target = batch[0].cuda(), batch[1].cuda()
+            targets.append(target)
             output = model(img_tensor)
             if isinstance(output, (tuple, list)):
                 output = output[0]
             loss = criterion(output, target)
             val_epoch_loss += loss.item()
             predicted_classes = torch.max(output, dim = 1)[1]
+            outputs.append(predicted_classes)
             acc += (predicted_classes == target).sum()
+
+    true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
+    predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
+    ccmm = confusion_matrix(true_vals, predicts)
+
+
+    val_phase_results = {
+        'Loss': val_epoch_loss.item(),
+        'Accuracy' : acc.item()/tests,
+        'F1' : f1_score(true_vals, predicts),
+        'confusion_matrix' : ccmm
+    }
+    return val_phase_results
+
 
     if dist.is_nccl_available():
         dist.all_reduce(acc, dist.ReduceOp.SUM)
@@ -107,7 +140,7 @@ def main_worker(args):
         raise ValueError('Task should be ihc-score or her-status')
 
     if args.model == 'resnet34':
-        model = resnet34(pretrained = False, num_classes = args.num_classes).cuda()
+        model = resnet34(weights = None, num_classes = args.num_classes).cuda()
     elif args.model == 'abmil':
         model = ResnetABMIL(num_classes = args.num_classes).cuda()
     else:
@@ -150,12 +183,17 @@ def main_worker(args):
     while epoch < epoch0 + args.epochs:
 
         train_phase_results = train_step(train_loader, model, criterion, optimizer)
-        run.log({"loss": train_phase_results["Loss"]})
+        run.log({"loss_train": train_phase_results["Loss"],
+                 "acc_train": train_phase_results["Accuracy"],
+                 "f1_train": train_phase_results["F1"]})
         val_phase_results = {'Loss': '', 'Accuracy' : ''}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
             acc = val_phase_results['Accuracy']
             scheduler.step(acc)
+            run.log({"loss_val": val_phase_results["Loss"],
+                     "acc_val": val_phase_results["Accuracy"],
+                     "f1_val": val_phase_results["F1"]})
 
         if True:#(proc_index == 0):
             print('Epoch {} finished.'.format(epoch))
@@ -189,7 +227,7 @@ def get_args():
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
     parser.add_argument('--train_csv', dest='train_csv', type=str, default='train.csv', help='.csv file containing the training examples')
-    parser.add_argument('--val_csv', dest='val_csv', type=str, default='None', help='.csv file containing the val examples')
+    parser.add_argument('--val_csv', dest='val_csv', type=str, default='val_csv', help='.csv file containing the val examples')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
     parser.add_argument('--ip_address', dest='master_addr', type=str, default='localhost', help='IP address of rank 0 node')
     parser.add_argument('--port', dest='master_port', type=str, default='8888', help='Free port on rank 0 node')
