@@ -28,7 +28,6 @@ def train_step(train_loader, model, criterion, optimizer):
         loss.backward()
         optimizer.step()
         training_epoch_loss += loss.item()
-        print(training_epoch_loss)
     
     training_phase_results = {
         'Loss': training_epoch_loss/( (i+1) ),
