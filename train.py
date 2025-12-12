@@ -75,14 +75,13 @@ def main_worker(args):
         project="stefano_project",
         # Track hyperparameters and run metadata.
         config={
-            "learning_rate": 0.02,
-            "architecture": "CNN",
-            "dataset": "CIFAR-100",
-            "epochs": 10,
+            "learning_rate": args.learning_rate,
+            "architecture": args.model,
+            "dataset": "DLBCL",
+            "epochs": args.epochs,
+            "task": args.task,
         },
     )
-
-    print(**args)
 
     # if torch.cuda.is_available():
     #     torch.cuda.set_device(proc_index)
