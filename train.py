@@ -134,9 +134,6 @@ def main_worker(args):
         },
     )
 
-    print(run.name)
-    print(run.id)
-
     # if torch.cuda.is_available():
     #     torch.cuda.set_device(proc_index)
     # else:
@@ -226,7 +223,7 @@ def main_worker(args):
                 'epoch': epoch,
                 'accuracy': val_phase_results['Accuracy']
 
-            }, os.path.join(args.checkpoints_dir,'checkpoint_{}.pth.tar'.format(epoch)))
+            }, os.path.join(args.checkpoints_dir,run.id,'checkpoint_{}.pth.tar'.format(epoch)))
         epoch += 1
 
     run.finish()
