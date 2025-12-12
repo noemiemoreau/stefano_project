@@ -134,6 +134,8 @@ def main_worker(args):
         },
     )
 
+    os.makedirs(os.path.join(args.checkpoints_dir,run.id))
+
     # if torch.cuda.is_available():
     #     torch.cuda.set_device(proc_index)
     # else:
