@@ -80,6 +80,8 @@ def main_worker(args):
             "dataset": "DLBCL",
             "epochs": args.epochs,
             "task": args.task,
+            "batch_size": args.batch_size,
+            "image_size": args.img_size
         },
     )
 
@@ -148,8 +150,8 @@ def main_worker(args):
     while epoch < epoch0 + args.epochs:
 
         train_phase_results = train_step(train_loader, model, criterion, optimizer)
-        run.log({"acc": acc, "loss": loss})
-        val_phase_results = {'Loss': train_phase_results["Loss"]}
+        run.log({"loss": train_phase_results["Loss"]})
+        val_phase_results = {'Loss': '', 'Accuracy' : ''}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
             acc = val_phase_results['Accuracy']
@@ -171,6 +173,8 @@ def main_worker(args):
         epoch += 1
 
     run.finish()
+
+
 
 def get_args():
     parser = argparse.ArgumentParser(description='Train HER2 overexpression classifier',
