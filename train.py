@@ -15,6 +15,8 @@ from src.utils import calculate_weights
 from src.dataset import DistributedWeightedSampler, ImageDataset
 from src.models import ResnetABMIL
 
+import wandb
+
 def train_step(train_loader, model, criterion, optimizer):
     model.train()
     training_epoch_loss = 0
@@ -65,7 +67,22 @@ def main_worker(args):
 
     torch.manual_seed(0)
     torch.cuda.manual_seed_all(0)
-    print(args)
+
+    run = wandb.init(
+        # Set the wandb entity where your project will be logged (generally your team name).
+        entity="my-awesome-team-name",
+        # Set the wandb project where this run will be logged.
+        project="my-awesome-project",
+        # Track hyperparameters and run metadata.
+        config={
+            "learning_rate": 0.02,
+            "architecture": "CNN",
+            "dataset": "CIFAR-100",
+            "epochs": 10,
+        },
+    )
+
+    print(**args)
 
     # if torch.cuda.is_available():
     #     torch.cuda.set_device(proc_index)
