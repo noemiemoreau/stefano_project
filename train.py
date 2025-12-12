@@ -57,7 +57,7 @@ def train_step(train_loader, model, criterion, optimizer):
 
     training_phase_results = {
         'Loss': training_epoch_loss / ( (i+1) ),
-        'Accuracy': acc / tests,
+        'Accuracy': acc.item() / tests,
         'Balanced_acc': balanced_accuracy_score(true_vals, predicts),
         'F1': f1_score(true_vals, predicts),
         'confusion_matrix': ccmm,
@@ -99,7 +99,7 @@ def validate_step(val_loader, model, criterion):
 
     val_phase_results = {
         'Loss': val_epoch_loss / ((i+1)),
-        'Accuracy' : acc / tests,
+        'Accuracy' : acc.item() / tests,
         'Balanced_acc': balanced_accuracy_score(true_vals, predicts),
         'F1' : f1_score(true_vals, predicts),
         'confusion_matrix' : ccmm
@@ -131,7 +131,14 @@ def main_worker(args):
             "epochs": args.epochs,
             "task": args.task,
             "batch_size": args.batch_size,
-            "image_size": args.img_size
+            "image_size": args.img_size,
+            "num_workers": args.num_workers,
+            "weight_decay": 1e-8,
+            "scheduler_factor": args.scheduler_factor,
+            "scheduler_patience": args.scheduler_patience,
+            "loss": "Cross_entropy",
+            "optimizer": "ADAM",
+            "scheduler": "ReduceLROnPlateau"
         },
     )
 
