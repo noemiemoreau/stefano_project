@@ -56,8 +56,8 @@ def train_step(train_loader, model, criterion, optimizer):
     ccmm = confusion_matrix(true_vals, predicts)
 
     training_phase_results = {
-        'Loss': training_epoch_loss/( (i+1) ),
-        'Accuracy': acc.item() / tests,
+        'Loss': training_epoch_loss / ( (i+1) ),
+        'Accuracy': acc / tests,
         'Balanced_acc': balanced_accuracy_score(true_vals, predicts),
         'F1': f1_score(true_vals, predicts),
         'confusion_matrix': ccmm,
@@ -68,8 +68,8 @@ def train_step(train_loader, model, criterion, optimizer):
 
 def validate_step(val_loader, model, criterion):
     model.eval()
-    val_epoch_loss = torch.tensor([0.0]).cuda()
-    acc = torch.tensor([0.0]).cuda()
+    val_epoch_loss = 0
+    acc = 0
     tests = 0
     targets = []
     outputs = []
@@ -98,22 +98,12 @@ def validate_step(val_loader, model, criterion):
 
 
     val_phase_results = {
-        'Loss': val_epoch_loss/( (i+1) ),
-        'Accuracy' : acc.item()/tests,
+        'Loss': val_epoch_loss / ((i+1)),
+        'Accuracy' : acc / tests,
         'Balanced_acc': balanced_accuracy_score(true_vals, predicts),
         'F1' : f1_score(true_vals, predicts),
         'confusion_matrix' : ccmm
     }
-    return val_phase_results
-
-
-    if dist.is_nccl_available():
-        dist.all_reduce(acc, dist.ReduceOp.SUM)
-        dist.all_reduce(val_epoch_loss, dist.ReduceOp.SUM)
-
-    acc /= ( (i+1) * dist.get_world_size() )
-    val_epoch_loss /= dist.get_world_size() 
-    val_phase_results = {'Loss': val_epoch_loss, 'Accuracy' : acc.item()} 
     return val_phase_results
 
 def main_worker(args):
