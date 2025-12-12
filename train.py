@@ -40,6 +40,7 @@ def train_step(train_loader, model, criterion, optimizer):
         print(output)
         optimizer.zero_grad()
         loss = criterion(output, target)
+        print(loss)
         loss.backward()
         optimizer.step()
         training_epoch_loss += loss.item()
