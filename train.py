@@ -16,11 +16,13 @@ from src.dataset import DistributedWeightedSampler, ImageDataset
 from src.models import ResnetABMIL
 
 import wandb
+import logging
 
 from sklearn.metrics import f1_score, confusion_matrix, balanced_accuracy_score
 
 import numpy as np
 import random
+
 
 def train_step(train_loader, model, criterion, optimizer):
     model.train()
@@ -118,6 +120,7 @@ def main_worker(args):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
+
     run = wandb.init(
         # Set the wandb entity where your project will be logged (generally your team name).
         entity="noemie-moreau96-university-of-cologne",
@@ -144,6 +147,12 @@ def main_worker(args):
     )
 
     os.makedirs(os.path.join(args.checkpoints_dir,run.id))
+
+    logging.basicConfig(filename=os.path.join(args.checkpoints_dir,run.id, "std.log"),
+                        format='%(asctime)s %(message)s',
+                        filemode='w',
+                        force=True)
+    logger = logging.getLogger()
 
     # if torch.cuda.is_available():
     #     torch.cuda.set_device(proc_index)
@@ -212,22 +221,25 @@ def main_worker(args):
     while epoch < epoch0 + args.epochs:
 
         train_phase_results = train_step(train_loader, model, criterion, optimizer)
-        run.log({"loss_train": train_phase_results["Loss"],
-                 "acc_train": train_phase_results["Accuracy"],
-                 "bal_acc_train": train_phase_results["Balanced_acc"]})
-        val_phase_results = {'Loss': '', 'Accuracy' : ''}
+        val_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
             acc = val_phase_results['Accuracy']
             scheduler.step(acc)
-            run.log({"loss_val": val_phase_results["Loss"],
-                     "acc_val": val_phase_results["Accuracy"],
-                     "bal_acc_val": val_phase_results["Balanced_acc"]})
 
         if True:#(proc_index == 0):
+            run.log({"loss_train": train_phase_results["Loss"],
+                     "acc_train": train_phase_results["Accuracy"],
+                     "bal_acc_train": train_phase_results["Balanced_acc"],
+                     "loss_val": val_phase_results["Loss"],
+                     "acc_val": val_phase_results["Accuracy"],
+                     "bal_acc_val": val_phase_results["Balanced_acc"]})
             print('Epoch {} finished.'.format(epoch))
+            logger.info('Epoch {} finished.'.format(epoch))
             print('Train phase: ', train_phase_results)
+            logger.info('Train phase: ', train_phase_results)
             print('Val phase: ', val_phase_results)
+            logger.info('Val phase: ', val_phase_results)
             print('\n')
 
             torch.save({
@@ -240,6 +252,10 @@ def main_worker(args):
         epoch += 1
 
     run.finish()
+    logs = self.logger.handlers[:]
+    for log in logs:
+        self.logger.removeHandler(log)
+        log.close()
 
 
 
