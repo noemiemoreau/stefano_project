@@ -65,6 +65,7 @@ def main_worker(args):
 
     torch.manual_seed(0)
     torch.cuda.manual_seed_all(0)
+    print(args)
 
     # if torch.cuda.is_available():
     #     torch.cuda.set_device(proc_index)
