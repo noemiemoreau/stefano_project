@@ -170,7 +170,7 @@ def main_worker(args):
     if args.val_csv != 'None':
         val_transform = transforms.Compose([
             transforms.Resize((args.img_size, args.img_size)),
-            transforms.ToTensor(),
+            #transforms.ToTensor(),
         ])
         val_df = pd.read_csv(args.val_csv)
         val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform)
