@@ -17,7 +17,7 @@ from src.models import ResnetABMIL
 
 import wandb
 
-from sklearn.metrics import f1_score, confusion_matrix
+from sklearn.metrics import f1_score, confusion_matrix, balanced_accuracy_score
 
 def train_step(train_loader, model, criterion, optimizer):
     model.train()
@@ -49,6 +49,7 @@ def train_step(train_loader, model, criterion, optimizer):
     training_phase_results = {
         'Loss': training_epoch_loss/( (i+1) ),
         'Accuracy': acc.item() / tests,
+        'Balanced_acc': balanced_accuracy_score(true_vals, predicts),
         'F1': f1_score(true_vals, predicts),
         'confusion_matrix': ccmm,
         'Learning rate': optimizer.param_groups[0]['lr']}
@@ -85,6 +86,7 @@ def validate_step(val_loader, model, criterion):
     val_phase_results = {
         'Loss': val_epoch_loss.item()/( (i+1) ),
         'Accuracy' : acc.item()/tests,
+        'Balanced_acc': balanced_accuracy_score(true_vals, predicts),
         'F1' : f1_score(true_vals, predicts),
         'confusion_matrix' : ccmm
     }
@@ -189,7 +191,7 @@ def main_worker(args):
         train_phase_results = train_step(train_loader, model, criterion, optimizer)
         run.log({"loss_train": train_phase_results["Loss"],
                  "acc_train": train_phase_results["Accuracy"],
-                 "f1_train": train_phase_results["F1"]})
+                 "bal_acc_train": train_phase_results["Balanced_acc"]})
         val_phase_results = {'Loss': '', 'Accuracy' : ''}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
@@ -197,7 +199,7 @@ def main_worker(args):
             scheduler.step(acc)
             run.log({"loss_val": val_phase_results["Loss"],
                      "acc_val": val_phase_results["Accuracy"],
-                     "f1_val": val_phase_results["F1"]})
+                     "bal_acc_val": val_phase_results["Balanced_acc"]})
 
         if True:#(proc_index == 0):
             print('Epoch {} finished.'.format(epoch))
