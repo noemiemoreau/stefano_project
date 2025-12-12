@@ -157,7 +157,7 @@ def main_worker(args):
             acc = val_phase_results['Accuracy']
             scheduler.step(acc)
 
-        if (proc_index == 0): 
+        if True:#(proc_index == 0):
             print('Epoch {} finished.'.format(epoch))
             print('Train phase: ', train_phase_results)
             print('Val phase: ', val_phase_results)
