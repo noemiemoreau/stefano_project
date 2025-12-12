@@ -104,8 +104,15 @@ def validate_step(val_loader, model, criterion):
 
 def main_worker(args):
 
-    torch.manual_seed(0)
-    torch.cuda.manual_seed_all(0)
+    seed = 42
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
     run = wandb.init(
         # Set the wandb entity where your project will be logged (generally your team name).
