@@ -32,24 +32,24 @@ def train_step(train_loader, model, criterion, optimizer):
     for i, batch in enumerate(train_loader):
         img_tensor, target = batch[0].cuda(), batch[1].cuda()
         targets.append(target)
-        print(target)
+        #print(target)
         output = model(img_tensor)
-        print(output)
+        #print(output)
         if isinstance(output, (tuple, list)):
             output = output[0]
-        print(output)
+        #print(output)
         optimizer.zero_grad()
         loss = criterion(output, target)
-        print(loss)
+        #print(loss)
         loss.backward()
         optimizer.step()
         training_epoch_loss += loss.item()
         predicted_classes = torch.max(output, dim=1)[1]
-        print(predicted_classes)
+        #print(predicted_classes)
         outputs.append(predicted_classes)
         acc += (predicted_classes == target).sum()
         tests += len(predicted_classes)
-        raise RuntimeError('debug')
+        #raise RuntimeError('debug')
 
     true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
     predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
@@ -77,19 +77,21 @@ def validate_step(val_loader, model, criterion):
         for i, batch in enumerate(val_loader):
             img_tensor, target = batch[0].cuda(), batch[1].cuda()
             targets.append(target)
-            #print(target)
+            print(target)
             output = model(img_tensor)
-            #print(output)
+            print(output)
             if isinstance(output, (tuple, list)):
                 output = output[0]
-            #print(output)
+            print(output)
             loss = criterion(output, target)
+            print(loss)
             val_epoch_loss += loss.item()
             predicted_classes = torch.max(output, dim = 1)[1]
             print(predicted_classes)
-            #outputs.append(predicted_classes)
+            outputs.append(predicted_classes)
             acc += (predicted_classes == target).sum()
             tests += len(predicted_classes)
+            raise RuntimeError('debug')
 
     true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
     predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
