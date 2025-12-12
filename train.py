@@ -16,7 +16,6 @@ from src.dataset import DistributedWeightedSampler, ImageDataset
 from src.models import ResnetABMIL
 
 import wandb
-import logging
 
 from sklearn.metrics import f1_score, confusion_matrix, balanced_accuracy_score
 
@@ -148,12 +147,6 @@ def main_worker(args):
 
     os.makedirs(os.path.join(args.checkpoints_dir,run.id))
 
-    logging.basicConfig(filename=os.path.join(args.checkpoints_dir,run.id, "std.log"),
-                        format='%(asctime)s %(message)s',
-                        filemode='w',
-                        force=True)
-    logger = logging.getLogger()
-
     # if torch.cuda.is_available():
     #     torch.cuda.set_device(proc_index)
     # else:
@@ -235,11 +228,8 @@ def main_worker(args):
                      "acc_val": val_phase_results["Accuracy"],
                      "bal_acc_val": val_phase_results["Balanced_acc"]})
             print('Epoch {} finished.'.format(epoch))
-            logger.info('Epoch {} finished.'.format(epoch))
             print('Train phase: ', train_phase_results)
-            logger.info('Train phase: ', train_phase_results)
             print('Val phase: ', val_phase_results)
-            logger.info('Val phase: ', val_phase_results)
             print('\n')
 
             torch.save({
@@ -252,10 +242,6 @@ def main_worker(args):
         epoch += 1
 
     run.finish()
-    logs = self.logger.handlers[:]
-    for log in logs:
-        self.logger.removeHandler(log)
-        log.close()
 
 
 
