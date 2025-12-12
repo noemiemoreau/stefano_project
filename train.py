@@ -23,6 +23,7 @@ def train_step(train_loader, model, criterion, optimizer):
     model.train()
     training_epoch_loss = 0
     acc = 0
+    tests = 0
     targets = []
     outputs = []
     for i, batch in enumerate(train_loader):
@@ -59,6 +60,7 @@ def validate_step(val_loader, model, criterion):
     model.eval()
     val_epoch_loss = torch.tensor([0.0]).cuda()
     acc = torch.tensor([0.0]).cuda()
+    tests = 0
     targets = []
     outputs = []
     with torch.no_grad():
