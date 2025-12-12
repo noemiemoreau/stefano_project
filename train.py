@@ -39,6 +39,7 @@ def train_step(train_loader, model, criterion, optimizer):
         predicted_classes = torch.max(output, dim=1)[1]
         outputs.append(predicted_classes)
         acc += (predicted_classes == target).sum()
+        tests += len(predicted_classes)
 
     true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
     predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
@@ -72,6 +73,7 @@ def validate_step(val_loader, model, criterion):
             predicted_classes = torch.max(output, dim = 1)[1]
             outputs.append(predicted_classes)
             acc += (predicted_classes == target).sum()
+            tests += len(predicted_classes)
 
     true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
     predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
