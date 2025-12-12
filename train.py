@@ -83,7 +83,7 @@ def validate_step(val_loader, model, criterion):
 
 
     val_phase_results = {
-        'Loss': val_epoch_loss.item(),
+        'Loss': val_epoch_loss.item()/( (i+1) ),
         'Accuracy' : acc.item()/tests,
         'F1' : f1_score(true_vals, predicts),
         'confusion_matrix' : ccmm
