@@ -8,4 +8,4 @@ onlyfiles = [f for f in os.listdir(image_path) if os.path.isfile(os.path.join(im
 image = np.load(image_path + onlyfiles[103])
 image = image[0, :, :]
 plt.imshow(image)
-plt.savefig('dapi/'+onlyfiles[103][-3]+"png")
+plt.savefig('dapi/'+onlyfiles[103][:-3]+"png")
