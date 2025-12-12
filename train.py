@@ -70,9 +70,9 @@ def main_worker(args):
 
     run = wandb.init(
         # Set the wandb entity where your project will be logged (generally your team name).
-        entity="my-awesome-team-name",
+        entity="noemie-moreau96-university-of-cologne",
         # Set the wandb project where this run will be logged.
-        project="my-awesome-project",
+        project="stefano_project",
         # Track hyperparameters and run metadata.
         config={
             "learning_rate": 0.02,
@@ -149,7 +149,8 @@ def main_worker(args):
     while epoch < epoch0 + args.epochs:
 
         train_phase_results = train_step(train_loader, model, criterion, optimizer)
-        val_phase_results = {'Loss': '', 'Accuracy' : ''} 
+        run.log({"acc": acc, "loss": loss})
+        val_phase_results = {'Loss': train_phase_results["Loss"]}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
             acc = val_phase_results['Accuracy']
@@ -169,6 +170,8 @@ def main_worker(args):
 
             }, os.path.join(args.checkpoints_dir,'checkpoint_{}.pth.tar'.format(epoch)))
         epoch += 1
+
+    run.finish()
 
 def get_args():
     parser = argparse.ArgumentParser(description='Train HER2 overexpression classifier',
