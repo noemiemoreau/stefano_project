@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import os
 import numpy as np
+import pandas as pd
 
 train_df = pd.read_csv("train.csv")
 val_df = pd.read_csv("val.csv")
