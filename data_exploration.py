@@ -9,11 +9,11 @@ test_df = pd.read_csv("test.csv")
 
 os.makedirs("/projects/ag-bozek/nmoreau/dapi_bis")
 
-for sample in train_df:
-    index, filename, label = sample[0], sample[1], sample[2]
+for idx in range(0, train_df.shape[0]):
+    index, filename, label = df.iloc[idx][0], df.iloc[idx][1], df.iloc[idx][2]
     image = np.load(filename)
     image = image[0, :, :]
-    print(index)
+    print(index, label)
     plt.imshow(image)
     plt.savefig('/projects/ag-bozek/nmoreau/dapi_bis/' + str(index) + "_" +str(label) + ".png")
 
