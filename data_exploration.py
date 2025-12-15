@@ -7,15 +7,15 @@ train_df = pd.read_csv("train.csv")
 val_df = pd.read_csv("val.csv")
 test_df = pd.read_csv("test.csv")
 
-os.makedirs("/projects/ag-bozek/nmoreau/dapi_bis/train")
+os.makedirs("/projects/ag-bozek/nmoreau/dapi_bis/val")
 
-for idx in range(0, train_df.shape[0]):
-    index, filename, label = train_df.iloc[idx][0], train_df.iloc[idx][1], train_df.iloc[idx][2]
+for idx in range(0, val_df.shape[0]):
+    index, filename, label = val_df.iloc[idx][0], val_df.iloc[idx][1], val_df.iloc[idx][2]
     image = np.load(filename)
     image = image[0, :, :]
     print(index, label)
     plt.imshow(image)
-    plt.savefig('/projects/ag-bozek/nmoreau/dapi_bis/train/' + str(index) + "_" +str(label) + ".png")
+    plt.savefig('/projects/ag-bozek/nmoreau/dapi_bis/val/' + str(index) + "_" +str(label) + ".png")
 
 
 
