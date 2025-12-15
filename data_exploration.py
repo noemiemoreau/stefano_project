@@ -15,7 +15,7 @@ for idx in range(0, train_df.shape[0]):
     image = image[0, :, :]
     print(index, label)
     plt.imshow(image)
-    plt.savefig('/projects/ag-bozek/nmoreau/dapi_bis/' + str(index) + "_" +str(label) + ".png")
+    plt.savefig('/projects/ag-bozek/nmoreau/dapi_bis/train/' + str(index) + "_" +str(label) + ".png")
 
 
 
