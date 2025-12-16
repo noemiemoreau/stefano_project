@@ -74,8 +74,8 @@ def train_step(train_loader, model, criterion, optimizer):
 
 
 def validate_step(val_loader, model, criterion):
-    # model.eval()
-    model.train()
+    model.eval()
+    # model.train()
     val_epoch_loss = 0
     acc = 0
     tests = 0
