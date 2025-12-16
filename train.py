@@ -81,8 +81,7 @@ def validate_step(val_loader, model, criterion):
     tests = 0
     targets = []
     outputs = []
-    if True:
-    # with torch.no_grad():
+    with torch.no_grad():
         for i, batch in enumerate(val_loader):
             img_tensor, target, filename = batch[0].cuda(), batch[1].cuda(), batch[2]
             targets.append(target)
@@ -231,10 +230,10 @@ def main_worker(args):
     epoch = epoch0
     while epoch < epoch0 + args.epochs:
 
-        train_phase_results = train_step(train_loader, model, criterion, optimizer)
+        train_phase_results = train_step(val_loader, model, criterion, optimizer)
         val_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
         if args.val_csv != 'None':
-            val_phase_results = validate_step(train_loader, model, criterion)
+            val_phase_results = validate_step(val_loader, model, criterion)
             # val_phase_results = train_step(val_loader, model, criterion, optimizer)
             acc = val_phase_results['Accuracy']
             scheduler.step(acc)
