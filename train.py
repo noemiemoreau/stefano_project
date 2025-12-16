@@ -142,7 +142,7 @@ def main_worker(args):
             "learning_rate": args.learning_rate,
             "architecture": args.model,
             "dataset": "DLBCL",
-            "nb_channel": "first_3",
+            "nb_channel": 14,
             "epochs": args.epochs,
             "task": args.task,
             "batch_size": args.batch_size,
@@ -183,8 +183,8 @@ def main_worker(args):
 
     if args.model == 'resnet34':
         model = resnet34(weights = None, num_classes = args.num_classes).cuda()
-        #for more channel we would need to change the first conv -> todo
-        #model.conv1 = Conv2d(n_channels, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        #for more channel we would need to change the first conv ->
+        model.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
     elif args.model == 'abmil':
         model = ResnetABMIL(num_classes = args.num_classes).cuda()
     else:
@@ -192,7 +192,7 @@ def main_worker(args):
 
     # model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
 
-    #todo remove this part later
+    #remove this part later
     # checkpoint = torch.load("checkpoints/hg7usvyq/checkpoint_40.pth.tar")
     # model.load_state_dict(checkpoint['model'])
 

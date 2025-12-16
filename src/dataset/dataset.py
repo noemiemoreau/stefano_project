@@ -14,7 +14,7 @@ class ImageDataset(Dataset):
     """
 
     def __init__(self, df, fn_col = None, lbl_col = None, transform = None, return_filename = False
-                 , which_channels = [list(range(3))]):
+                 , which_channels = [list(range(14))]): #14 is the original number of channel -> todo next
         self.df = df
         self.fn_col = fn_col if fn_col != None else df.columns[0]
         self.lbl_col = lbl_col if lbl_col != None else df.columns[1]
