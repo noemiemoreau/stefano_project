@@ -32,7 +32,6 @@ def train_step(train_loader, model, criterion, optimizer):
     outputs = []
     for i, batch in enumerate(train_loader):
         img_tensor, target, filename = batch[0].cuda(), batch[1].cuda(), batch[2]
-        print(filename)
         targets.append(target)
         #print(target)
         output = model(img_tensor)
@@ -52,6 +51,11 @@ def train_step(train_loader, model, criterion, optimizer):
         acc += (predicted_classes == target).sum()
         tests += len(predicted_classes)
         #raise RuntimeError('debug')
+        if "/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/002_for_resnet.npy" in filename:
+            print(target)
+            print(output)
+            print(loss)
+            print(predicted_classes)
 
     true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
     predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
