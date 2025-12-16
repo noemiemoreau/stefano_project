@@ -42,8 +42,8 @@ def train_step(train_loader, model, criterion, optimizer):
         optimizer.zero_grad()
         loss = criterion(output, target)
         #print(loss)
-        loss.backward()
-        optimizer.step()
+        # loss.backward()
+        # optimizer.step()
         training_epoch_loss += loss.item()
         predicted_classes = torch.max(output, dim=1)[1]
         #print(predicted_classes)
@@ -232,7 +232,8 @@ def main_worker(args):
         train_phase_results = train_step(train_loader, model, criterion, optimizer)
         val_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
         if args.val_csv != 'None':
-            val_phase_results = validate_step(val_loader, model, criterion)
+            # val_phase_results = validate_step(val_loader, model, criterion)
+            val_phase_results = train_step(val_loader, model, criterion, optimizer)
             acc = val_phase_results['Accuracy']
             scheduler.step(acc)
 
