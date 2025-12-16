@@ -154,7 +154,7 @@ def main_worker(args):
             "loss": "Cross_entropy",
             "optimizer": "ADAM",
             "scheduler": "ReduceLROnPlateau",
-            "shuffle": False,
+            "shuffle": True,
         },
     )
 
@@ -209,7 +209,7 @@ def main_worker(args):
         args.weighted_sampler_label = args.task
     # weights = calculate_weights(torch.tensor(train_df[args.weighted_sampler_label].values))
     # train_sampler = DistributedWeightedSampler(weights, num_replicas=args.gpus, rank=proc_index, shuffle=True)
-    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True, shuffle=True)
 
     if args.val_csv != 'None':
         val_transform = transforms.Compose([
