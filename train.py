@@ -52,6 +52,7 @@ def train_step(train_loader, model, criterion, optimizer):
         tests += len(predicted_classes)
         #raise RuntimeError('debug')
         if "/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/002_for_resnet.npy" in filename:
+            print(filename)
             print(target)
             print(output)
             print(loss)
@@ -81,7 +82,7 @@ def validate_step(val_loader, model, criterion):
     outputs = []
     with torch.no_grad():
         for i, batch in enumerate(val_loader):
-            img_tensor, target = batch[0].cuda(), batch[1].cuda()
+            img_tensor, target, filename = batch[0].cuda(), batch[1].cuda(), batch[2]
             targets.append(target)
             # print(target)
             output = model(img_tensor)
@@ -97,6 +98,12 @@ def validate_step(val_loader, model, criterion):
             acc += (predicted_classes == target).sum()
             tests += len(predicted_classes)
             # raise RuntimeError('debug')
+            if "/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/002_for_resnet.npy" in filename:
+                print(filename)
+                print(target)
+                print(output)
+                print(loss)
+                print(predicted_classes)
 
     true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
     predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
@@ -183,6 +190,9 @@ def main_worker(args):
         raise ValueError('Model should be resnet34 or abmil')  
 
     # model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
+
+    checkpoint = torch.load("checkpoints/hg7usvyq/checkpoint_40.pth.tar")
+    model.load_state_dict(checkpoint['model_state_dict'])
 
     train_transform = transforms.Compose([
         transforms.Resize((args.img_size, args.img_size)),
