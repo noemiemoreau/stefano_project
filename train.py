@@ -42,8 +42,8 @@ def train_step(train_loader, model, criterion, optimizer):
         optimizer.zero_grad()
         loss = criterion(output, target)
         #print(loss)
-        # loss.backward()
-        # optimizer.step()
+        loss.backward()
+        optimizer.step()
         training_epoch_loss += loss.item()
         predicted_classes = torch.max(output, dim=1)[1]
         #print(predicted_classes)
@@ -51,12 +51,12 @@ def train_step(train_loader, model, criterion, optimizer):
         acc += (predicted_classes == target).sum()
         tests += len(predicted_classes)
         #raise RuntimeError('debug')
-        if "/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/004_for_resnet.npy" in filename:
-            print(filename)
-            print(target)
-            print(output)
-            print(loss)
-            print(predicted_classes)
+        # if "/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/004_for_resnet.npy" in filename:
+        #     print(filename)
+        #     print(target)
+        #     print(output)
+        #     print(loss)
+        #     print(predicted_classes)
 
     true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
     predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
@@ -75,7 +75,6 @@ def train_step(train_loader, model, criterion, optimizer):
 
 def validate_step(val_loader, model, criterion):
     model.eval()
-    # model.train()
     val_epoch_loss = 0
     acc = 0
     tests = 0
@@ -99,12 +98,12 @@ def validate_step(val_loader, model, criterion):
             acc += (predicted_classes == target).sum()
             tests += len(predicted_classes)
             # raise RuntimeError('debug')
-            if "/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/004_for_resnet.npy" in filename:
-                print(filename)
-                print(target)
-                print(output)
-                print(loss)
-                print(predicted_classes)
+            # if "/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/004_for_resnet.npy" in filename:
+            #     print(filename)
+            #     print(target)
+            #     print(output)
+            #     print(loss)
+            #     print(predicted_classes)
 
     true_vals = torch.tensor([k for t in targets for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in targets for k in t])
     predicts = torch.tensor([k for t in outputs for k in t]).cpu().numpy()#torch.tensor([t.cpu().numpy()[k] for t in outputs for k in t])
@@ -154,7 +153,8 @@ def main_worker(args):
             "scheduler_patience": args.scheduler_patience,
             "loss": "Cross_entropy",
             "optimizer": "ADAM",
-            "scheduler": "ReduceLROnPlateau"
+            "scheduler": "ReduceLROnPlateau",
+            "shuffle": False,
         },
     )
 
@@ -193,8 +193,8 @@ def main_worker(args):
     # model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
 
     #todo remove this part later
-    checkpoint = torch.load("checkpoints/hg7usvyq/checkpoint_40.pth.tar")
-    model.load_state_dict(checkpoint['model'])
+    # checkpoint = torch.load("checkpoints/hg7usvyq/checkpoint_40.pth.tar")
+    # model.load_state_dict(checkpoint['model'])
 
     train_transform = transforms.Compose([
         transforms.Resize((args.img_size, args.img_size)),
@@ -230,7 +230,7 @@ def main_worker(args):
     epoch = epoch0
     while epoch < epoch0 + args.epochs:
 
-        train_phase_results = train_step(val_loader, model, criterion, optimizer)
+        train_phase_results = train_step(train_loader, model, criterion, optimizer)
         val_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
