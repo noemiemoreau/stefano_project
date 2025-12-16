@@ -31,7 +31,8 @@ def train_step(train_loader, model, criterion, optimizer):
     targets = []
     outputs = []
     for i, batch in enumerate(train_loader):
-        img_tensor, target = batch[0].cuda(), batch[1].cuda()
+        img_tensor, target, filename = batch[0].cuda(), batch[1].cuda(), batch[2]
+        print(filename)
         targets.append(target)
         #print(target)
         output = model(img_tensor)
@@ -187,7 +188,7 @@ def main_worker(args):
     ])
 
     train_df = pd.read_csv(args.train_csv)
-    train_dataset = ImageDataset(train_df, fn_col = 'filename', lbl_col = args.task, transform = train_transform)
+    train_dataset = ImageDataset(train_df, fn_col = 'filename', lbl_col = args.task, transform = train_transform, return_filename=True)
     if args.weighted_sampler_label == 'None':
         args.weighted_sampler_label = args.task
     # weights = calculate_weights(torch.tensor(train_df[args.weighted_sampler_label].values))
@@ -200,7 +201,7 @@ def main_worker(args):
             #transforms.ToTensor(),
         ])
         val_df = pd.read_csv(args.val_csv)
-        val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform)
+        val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform, return_filename=True)
         # val_sampler = DistributedSampler(val_dataset, num_replicas=args.gpus, rank=proc_index, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
     
