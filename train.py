@@ -74,13 +74,15 @@ def train_step(train_loader, model, criterion, optimizer):
 
 
 def validate_step(val_loader, model, criterion):
-    model.eval()
+    # model.eval()
+    model.train()
     val_epoch_loss = 0
     acc = 0
     tests = 0
     targets = []
     outputs = []
-    with torch.no_grad():
+    if True:
+    # with torch.no_grad():
         for i, batch in enumerate(val_loader):
             img_tensor, target, filename = batch[0].cuda(), batch[1].cuda(), batch[2]
             targets.append(target)
