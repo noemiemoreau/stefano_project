@@ -6,7 +6,7 @@ import torch
 import torch.distributed as dist
 from torch.utils.data import DataLoader, DistributedSampler
 from torch.nn.parallel import DistributedDataParallel
-from torch.nn import CrossEntropyLoss
+from torch.nn import CrossEntropyLoss, Conv2d
 from torchvision.models import resnet34
 from torchvision import transforms
 import pandas as pd
