@@ -182,9 +182,10 @@ def main_worker(args):
         raise ValueError('Task should be ihc-score or her-status')
 
     if args.model == 'resnet34':
-        model = resnet34(weights = None, num_classes = args.num_classes).cuda()
+        model = resnet34(weights = None, num_classes = args.num_classes)
         #for more channel we would need to change the first conv ->
         model.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        model = model.cuda()
     elif args.model == 'abmil':
         model = ResnetABMIL(num_classes = args.num_classes).cuda()
     else:
