@@ -139,21 +139,21 @@ def main_worker(args):
         project="stefano_project",
         # Track hyperparameters and run metadata.
         config={
-            "learning_rate": args.learning_rate,
+            "learning_rate": args.learning_rate, #todo change learning rate
             "architecture": args.model,
             "dataset": "DLBCL",
             "nb_channel": 14,
             "epochs": args.epochs,
             "task": args.task,
-            "batch_size": args.batch_size,
+            "batch_size": args.batch_size, #todo larger batch?
             "image_size": args.img_size,
             "num_workers": args.num_workers,
             "weight_decay": 1e-8,
             "scheduler_factor": args.scheduler_factor,
             "scheduler_patience": args.scheduler_patience,
-            "loss": "Cross_entropy",
+            "loss": "Cross_entropy", #todo change loss
             "optimizer": "ADAM",
-            "scheduler": "ReduceLROnPlateau",
+            "scheduler": "ReduceLROnPlateau", #todo change for balanced accuracy?
             "shuffle": True,
         },
     )
@@ -276,13 +276,13 @@ def get_args():
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
-    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train.csv', help='.csv file containing the training examples')
-    parser.add_argument('--val_csv', dest='val_csv', type=str, default='test.csv', help='.csv file containing the val examples')
+    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_bis.csv', help='.csv file containing the training examples')
+    parser.add_argument('--val_csv', dest='val_csv', type=str, default='test_bis.csv', help='.csv file containing the val examples')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
     parser.add_argument('--ip_address', dest='master_addr', type=str, default='localhost', help='IP address of rank 0 node')
     parser.add_argument('--port', dest='master_port', type=str, default='8888', help='Free port on rank 0 node')
     parser.add_argument('--num_workers', dest='num_workers', type=int, default=0, help='Number of workers for loading data')
-    parser.add_argument('--img_size', dest='img_size', type=int, default=2048, help='Input image size for the model')
+    parser.add_argument('--img_size', dest='img_size', type=int, default=1024, help='Input image size for the model')
     return parser.parse_args()
 
 
