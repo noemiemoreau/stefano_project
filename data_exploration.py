@@ -25,7 +25,7 @@ for idx in range(0, test_df.shape[0]):
     transform = transforms.Pad((diff_y, diff_x))
     image = transform(image)
     print(image.shape)
-    plt.imshow(image)
+    plt.imshow(image[0, :, :])
     plt.savefig('dapi_croped/train' + str(index) + "_" +str(label) + ".png")
 
 
