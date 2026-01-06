@@ -16,7 +16,7 @@ which_channels = [list(range(14))]
 for idx in range(0, test_df.shape[0]):
     index, filename, label = test_df.iloc[idx][0], test_df.iloc[idx][1], test_df.iloc[idx][2]
     image = np.load(filename)
-    image = image[self.which_channels, :, :]
+    image = image[which_channels, :, :]
     print(image.shape)
     print(image.dtype)
     image = tensor(image, dtype=float32)[0]
