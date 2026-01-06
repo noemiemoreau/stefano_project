@@ -1,6 +1,7 @@
 from torch.utils.data import Dataset
 import numpy as np
 from torch import tensor, float32
+import torchvision.transforms as transforms
 
 class ImageDataset(Dataset):
     """Dataset class for a .csv containing paths to images
