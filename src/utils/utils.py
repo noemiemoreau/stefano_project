@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from torchvision import transforms
 from collections import OrderedDict
+from torch import tensor
 
 rng = np.random.default_rng(seed=0)
 
