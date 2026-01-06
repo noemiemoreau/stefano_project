@@ -21,8 +21,9 @@ for idx in range(0, test_df.shape[0]):
     print(image_np.shape)
     print(image_np.dtype)
     image = tensor(image_np, dtype=float32)[0]
-    diff_x = size_max_x - image_np.shape[0]
-    diff_y = size_max_y - image_np.shape[1]
+    diff_x = (size_max_x - image_np.shape[0]) // 2
+    diff_y = (size_max_y - image_np.shape[1]) // 2
+    print(diff_x, diff_y)
     transform = transforms.Pad((diff_x, diff_y))
     image = transform(image)
     print(image.shape)
