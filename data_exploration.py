@@ -3,9 +3,9 @@ import os
 import numpy as np
 import pandas as pd
 
-train_df = pd.read_csv("train.csv")
+train_df = pd.read_csv("train_bis.csv")
 val_df = pd.read_csv("val.csv")
-test_df = pd.read_csv("test.csv")
+test_df = pd.read_csv("test_bis.csv")
 
 # os.makedirs("/projects/ag-bozek/nmoreau/dapi_bis/train")
 size_max_x = 0
