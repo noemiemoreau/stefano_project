@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 from torch import tensor, float32
+import torchvision.transforms as transforms
 
 train_df = pd.read_csv("train_bis.csv")
 val_df = pd.read_csv("val.csv")
@@ -15,11 +16,15 @@ which_channels = [list(range(14))]
 
 for idx in range(0, test_df.shape[0]):
     index, filename, label = test_df.iloc[idx][0], test_df.iloc[idx][1], test_df.iloc[idx][2]
-    image = np.load(filename)
-    image = image[which_channels, :, :]
-    print(image.shape)
-    print(image.dtype)
-    image = tensor(image, dtype=float32)[0]
+    image_np = np.load(filename)
+    image_np = image_np[which_channels, :, :]
+    print(image_np.shape)
+    print(image_np.dtype)
+    image = tensor(image_np, dtype=float32)[0]
+    diff_x = size_max_x - image_np.shape[0]
+    diff_y = size_max_y - image_np.shape[1]
+    transform = transforms.Pad((diff_x, diff_y))
+    image = transform(image)
     print(image.shape)
     print(image.dtype)
 
