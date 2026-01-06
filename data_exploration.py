@@ -7,15 +7,23 @@ train_df = pd.read_csv("train.csv")
 val_df = pd.read_csv("val.csv")
 test_df = pd.read_csv("test.csv")
 
-os.makedirs("/projects/ag-bozek/nmoreau/dapi_bis/test")
+os.makedirs("/projects/ag-bozek/nmoreau/dapi_bis/train")
+size_max_x = 0
+size_max_y= 0
 
 for idx in range(0, test_df.shape[0]):
     index, filename, label = test_df.iloc[idx][0], test_df.iloc[idx][1], test_df.iloc[idx][2]
     image = np.load(filename)
     image = image[0, :, :]
-    print(index, label)
-    plt.imshow(image)
-    plt.savefig('/projects/ag-bozek/nmoreau/dapi_bis/test/' + str(index) + "_" +str(label) + ".png")
+    size_x = image.shape[0]
+    size_y = image.shape[1]
+    if size_x > size_max_x:
+        size_max_x = size_x
+        size_max_y = size_y
+    print(index, label, size_x, size_y)
+print(size_max_x, size_max_y)
+    # plt.imshow(image)
+    # plt.savefig('/projects/ag-bozek/nmoreau/dapi_bis/test/' + str(index) + "_" +str(label) + ".png")
 
 
 
