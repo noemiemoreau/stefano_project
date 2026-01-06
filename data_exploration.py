@@ -24,7 +24,7 @@ for idx in range(0, test_df.shape[0]):
     diff_x = (size_max_x - image_np.shape[2]) // 2
     diff_y = (size_max_y - image_np.shape[3]) // 2
     print(diff_y, diff_x)
-    transform = transforms.Pad((diff_x, diff_y))
+    transform = transforms.Pad((diff_y, diff_x))
     image = transform(image)
     print(image.shape)
     print(image.dtype)
