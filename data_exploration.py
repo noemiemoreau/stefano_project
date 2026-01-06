@@ -17,7 +17,7 @@ for idx in range(0, test_df.shape[0]):
     image = np.load(filename)
     print(image.shape)
     print(image.dtype)
-    image = tensor(image, dtype=float32)[0]
+    image = tensor(image, dtype=float32)
     print(image.shape)
     print(image.dtype)
 
