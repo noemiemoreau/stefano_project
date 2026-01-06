@@ -37,7 +37,6 @@ class ImageDataset(Dataset):
         diff_y = (self.size_max_y - image.shape[2]) // 2
         transform = transforms.Pad((diff_y, diff_x))
         image = transform(image)
-        print(image.shape)
         if self.transform != None:
             image = self.transform(image)
         lbl = self.df.iloc[idx][self.lbl_col]
