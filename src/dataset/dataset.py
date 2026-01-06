@@ -21,6 +21,8 @@ class ImageDataset(Dataset):
         self.transform = transform
         self.return_filename = return_filename
         self.which_channels = which_channels
+        self.size_max_x = 9400
+        self.size_max_y = 9400
 
     def __len__(self):
         return self.df.shape[0]
@@ -30,8 +32,8 @@ class ImageDataset(Dataset):
         image = np.load(fn)
         image = image[self.which_channels, :, :]
         image = tensor(image, dtype=float32)[0]
-        diff_x = (size_max_x - image.shape[1]) // 2
-        diff_y = (size_max_y - image.shape[2]) // 2
+        diff_x = (self.size_max_x - image.shape[1]) // 2
+        diff_y = (self.size_max_y - image.shape[2]) // 2
         transform = transforms.Pad((diff_y, diff_x))
         image = transform(image)
         print(image.shape)
