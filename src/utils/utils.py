@@ -19,23 +19,23 @@ def calculate_areas(tensor):
     return tensor.sum(dim = dims-2).sum(dim = dims-2)
 
 def get_valid_patches(img_tensor, tile_size, stride, rand_offset = True):
-    mask_transform = transforms.Compose([ transforms.Grayscale(), (lambda x: 1 - (x > 220./255)*1) ])
     if rand_offset:
         x_off, y_off = rng.integers(stride), rng.integers(stride)
     else:
-        x_off, y_off = 0,0
+        x_off, y_off = 0, 0
     img_tensor = img_tensor[..., y_off:, x_off:]
-    mask_tensor = mask_transform(img_tensor)
+    mask_tensor = np.zeros((img_tensor.shape[1], img_tensor.shape[2]))
+    mask_tensor[img_tensor[0] > 10] = 1
     img_patches = get_patches(img_tensor, tile_size, stride)
-    mask_patches = get_patches(mask_tensor, tile_size, stride)
+    mask_patches = get_patches(tensor([mask_tensor]), tile_size, stride)
     mask_patches_areas = calculate_areas(mask_patches)
     area_th = 0.05 * tile_size * tile_size
     valid_mask_indices = mask_patches_areas > area_th
-    mask_patches = mask_patches[valid_mask_indices].view(*list(mask_patches.shape)[:-3],-1,tile_size, tile_size)
-    valid_img_indices = torch.cat(3*[valid_mask_indices], dim = 0)
-    img_patches = img_patches[valid_img_indices].view(*list(img_patches.shape)[:-3],-1,tile_size, tile_size)
-    img_patches = img_patches.permute(1,0,2,3)
-    return img_patches, valid_mask_indices 
+    mask_patches = mask_patches[valid_mask_indices].view(*list(mask_patches.shape)[:-3], -1, tile_size, tile_size)
+    valid_img_indices = torch.cat(14 * [valid_mask_indices], dim=0)
+    img_patches = img_patches[valid_img_indices].view(*list(img_patches.shape)[:-3], -1, tile_size, tile_size)
+    img_patches = img_patches.permute(1, 0, 2, 3)
+    return img_patches, valid_mask_indices
 
 def calculate_weights(targets):
     class_sample_count = torch.tensor(
