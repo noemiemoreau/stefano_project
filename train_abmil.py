@@ -198,7 +198,7 @@ def main_worker(args):
     # model.load_state_dict(checkpoint['model'])
 
     train_transform = transforms.Compose([
-        # transforms.Resize((args.img_size, args.img_size)),
+        transforms.Resize((args.img_size, args.img_size)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
         # transforms.ToTensor(),
@@ -214,7 +214,7 @@ def main_worker(args):
 
     if args.val_csv != 'None':
         val_transform = transforms.Compose([
-            # transforms.Resize((args.img_size, args.img_size)),
+            transforms.Resize((args.img_size, args.img_size)),
             #transforms.ToTensor(),
         ])
         val_df = pd.read_csv(args.val_csv)
@@ -282,7 +282,7 @@ def get_args():
     parser.add_argument('--ip_address', dest='master_addr', type=str, default='localhost', help='IP address of rank 0 node')
     parser.add_argument('--port', dest='master_port', type=str, default='8888', help='Free port on rank 0 node')
     parser.add_argument('--num_workers', dest='num_workers', type=int, default=0, help='Number of workers for loading data')
-    parser.add_argument('--img_size', dest='img_size', type=int, default=9400, help='Input image size for the model')
+    parser.add_argument('--img_size', dest='img_size', type=int, default=4700, help='Input image size for the model')
     return parser.parse_args()
 
 
