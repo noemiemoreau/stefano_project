@@ -30,6 +30,11 @@ class ImageDataset(Dataset):
         image = np.load(fn)
         image = image[self.which_channels, :, :]
         image = tensor(image, dtype=float32)[0]
+        diff_x = (size_max_x - image.shape[1]) // 2
+        diff_y = (size_max_y - image.shape[2]) // 2
+        transform = transforms.Pad((diff_y, diff_x))
+        image = transform(image)
+        print(image.shape)
         if self.transform != None:
             image = self.transform(image)
         lbl = self.df.iloc[idx][self.lbl_col]
