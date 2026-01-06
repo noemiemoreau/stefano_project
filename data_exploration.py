@@ -9,7 +9,7 @@ train_df = pd.read_csv("train_bis.csv")
 val_df = pd.read_csv("val.csv")
 test_df = pd.read_csv("test_bis.csv")
 
-# os.makedirs("/projects/ag-bozek/nmoreau/dapi_bis/train")
+os.makedirs("dapi_croped/test")
 size_max_x = 9400
 size_max_y= 9400
 which_channels = [list(range(14))]
@@ -25,6 +25,8 @@ for idx in range(0, test_df.shape[0]):
     transform = transforms.Pad((diff_y, diff_x))
     image = transform(image)
     print(image.shape)
+    plt.imshow(image)
+    plt.savefig('dapi_croped/train' + str(index) + "_" +str(label) + ".png")
 
 
 
