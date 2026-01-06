@@ -11,8 +11,8 @@ test_df = pd.read_csv("test_bis.csv")
 size_max_x = 0
 size_max_y= 0
 
-for idx in range(0, train_df.shape[0]):
-    index, filename, label = train_df.iloc[idx][0], train_df.iloc[idx][1], train_df.iloc[idx][2]
+for idx in range(0, test_df.shape[0]):
+    index, filename, label = test_df.iloc[idx][0], test_df.iloc[idx][1], test_df.iloc[idx][2]
     image = np.load(filename)
     image = image[0, :, :]
     size_x = image.shape[0]
