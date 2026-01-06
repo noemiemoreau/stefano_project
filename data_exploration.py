@@ -11,13 +11,15 @@ test_df = pd.read_csv("test_bis.csv")
 # os.makedirs("/projects/ag-bozek/nmoreau/dapi_bis/train")
 size_max_x = 9400
 size_max_y= 9400
+which_channels = [list(range(14))]
 
 for idx in range(0, test_df.shape[0]):
     index, filename, label = test_df.iloc[idx][0], test_df.iloc[idx][1], test_df.iloc[idx][2]
     image = np.load(filename)
+    image = image[self.which_channels, :, :]
     print(image.shape)
     print(image.dtype)
-    image = tensor(image, dtype=float32)
+    image = tensor(image, dtype=float32)[0]
     print(image.shape)
     print(image.dtype)
 
