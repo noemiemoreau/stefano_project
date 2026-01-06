@@ -14,7 +14,7 @@ class ImageDataset(Dataset):
     """
     #todo pad all images to have the same size before resizing to keep good resolution (max size train: 9340 8232, test: 8428 7824)
     def __init__(self, df, fn_col = None, lbl_col = None, transform = None, return_filename = False
-                 , which_channels = [list(range(4))]):
+                 , which_channels = [list(range(14))]):
         self.df = df
         self.fn_col = fn_col if fn_col != None else df.columns[0]
         self.lbl_col = lbl_col if lbl_col != None else df.columns[1]
@@ -29,7 +29,8 @@ class ImageDataset(Dataset):
         fn = self.df.iloc[idx][self.fn_col]
         image = np.load(fn)
         image = image[self.which_channels, :, :]
-        image = tensor(image, dtype=float32)
+        image = tensor(image, dtype=float32)[0]
+        print(image.shape)
         if self.transform != None:
             image = self.transform(image)
         lbl = self.df.iloc[idx][self.lbl_col]
