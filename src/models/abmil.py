@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import models
 import src.utils as utils
+from torch.nn import Conv2d
 
 class GatedAttention(nn.Module):
     """
@@ -46,7 +47,6 @@ class ResnetABMIL(nn.Module):
 
         resnet = models.resnet34(weights = None, progress = progress, **kwargs)
         resnet.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-        # for more channel we would need to change the first conv -> todo
         if freeze_resnet:
             for param in resnet.parameters():
                 param.requires_grad = False
