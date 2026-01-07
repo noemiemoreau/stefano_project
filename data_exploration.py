@@ -13,8 +13,8 @@ size_max_x = 9400
 size_max_y= 9400
 which_channels = [list(range(14))]
 
-for idx in range(0, test_df.shape[0]):
-    index, filename, label = test_df.iloc[idx][0], test_df.iloc[idx][1], test_df.iloc[idx][2]
+for idx in range(0, train_df.shape[0]):
+    index, filename, label = train_df.iloc[idx][0], train_df.iloc[idx][1], train_df.iloc[idx][2]
     image_np = np.load(filename)
     image_np = image_np[which_channels, :, :]
     print(filename, image_np.shape)
