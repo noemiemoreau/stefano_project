@@ -9,7 +9,6 @@ train_df = pd.read_csv("train_bis.csv")
 val_df = pd.read_csv("val.csv")
 test_df = pd.read_csv("test_bis.csv")
 
-os.makedirs("dapi_croped/test")
 size_max_x = 9400
 size_max_y= 9400
 which_channels = [list(range(14))]
@@ -18,15 +17,15 @@ for idx in range(0, test_df.shape[0]):
     index, filename, label = test_df.iloc[idx][0], test_df.iloc[idx][1], test_df.iloc[idx][2]
     image_np = np.load(filename)
     image_np = image_np[which_channels, :, :]
-    print(image_np.shape)
-    image = tensor(image_np, dtype=float32)[0]
-    diff_x = (size_max_x - image.shape[1]) // 2
-    diff_y = (size_max_y - image.shape[2]) // 2
-    transform = transforms.Pad((diff_y, diff_x))
-    image = transform(image)
-    print(image.shape)
-    plt.imshow(image[0, :, :])
-    plt.savefig('dapi_croped/train' + str(index) + "_" +str(label) + ".png")
+    print(filename, image_np.shape)
+    # image = tensor(image_np, dtype=float32)[0]
+    # diff_x = (size_max_x - image.shape[1]) // 2
+    # diff_y = (size_max_y - image.shape[2]) // 2
+    # transform = transforms.Pad((diff_y, diff_x))
+    # image = transform(image)
+    # print(image.shape)
+    # plt.imshow(image[0, :, :])
+    # plt.savefig('dapi_croped/train' + str(index) + "_" +str(label) + ".png")
 
 
 
