@@ -3,6 +3,7 @@ import numpy as np
 from torch import tensor, float32
 import torchvision.transforms as torch_transforms
 import matplotlib.pyplot as plt
+import os
 
 class ImageDataset(Dataset):
     """Dataset class for a .csv containing paths to images
