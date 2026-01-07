@@ -38,12 +38,12 @@ class ImageDataset(Dataset):
         diff_x = (self.size_max_x - image.shape[1]) // 2
         diff_y = (self.size_max_y - image.shape[2]) // 2
         transform_padding = torch_transforms.Pad((diff_y, diff_x))
-        image = transform_padding(image)
+        # image = transform_padding(image)
         if self.transform != None:
             image = self.transform(image)
         file_name = os.path.basename(fn)
         plt.imshow(image[0, :, :])
-        plt.savefig('dapi_croped/' + file_name[:-3] + "png")
+        plt.savefig('dapi/' + file_name[:-3] + "png")
         lbl = self.df.iloc[idx][self.lbl_col]
         out_tuple = (image, lbl, fn) if self.return_filename else (image, lbl)
         return out_tuple
