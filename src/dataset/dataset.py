@@ -1,7 +1,7 @@
 from torch.utils.data import Dataset
 import numpy as np
 from torch import tensor, float32
-import torchvision.transforms as transforms
+import torchvision.transforms as torch_transforms
 
 class ImageDataset(Dataset):
     """Dataset class for a .csv containing paths to images
@@ -35,8 +35,8 @@ class ImageDataset(Dataset):
         image = tensor(image, dtype=float32)[0]
         diff_x = (self.size_max_x - image.shape[1]) // 2
         diff_y = (self.size_max_y - image.shape[2]) // 2
-        transform = transforms.Pad((diff_y, diff_x))
-        image = transform(image)
+        transform_padding = torch_transforms.Pad((diff_y, diff_x))
+        image = transform_padding(image)
         if self.transform != None:
             image = self.transform(image)
         lbl = self.df.iloc[idx][self.lbl_col]
