@@ -19,7 +19,7 @@ for idx in range(0, train_df.shape[0]):
     image_np = image_np[which_channels, :, :]
     print(filename, image_np.shape)
     transformation = transforms.CenterCrop(7000)
-    # image = tensor(image_np, dtype=float32)[0]
+    image = tensor(image_np, dtype=float32)[0]
     # diff_x = (size_max_x - image.shape[1]) // 2
     # diff_y = (size_max_y - image.shape[2]) // 2
     # transform = transforms.Pad((diff_y, diff_x))
