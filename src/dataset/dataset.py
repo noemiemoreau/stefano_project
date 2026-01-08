@@ -42,8 +42,8 @@ class ImageDataset(Dataset):
         if self.transform != None:
             image = self.transform(image)
         file_name = os.path.basename(fn)
-        plt.imshow(image[0, :, :])
-        plt.savefig('dapi/' + file_name[:-3] + "png")
+        # plt.imshow(image[0, :, :])
+        # plt.savefig('dapi/' + file_name[:-3] + "png")
         lbl = self.df.iloc[idx][self.lbl_col]
         out_tuple = (image, lbl, fn) if self.return_filename else (image, lbl)
         return out_tuple
