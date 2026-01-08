@@ -35,13 +35,13 @@ class ImageDataset(Dataset):
         image = np.load(fn)
         image = image[self.which_channels, :, :]
         image = tensor(image, dtype=float32)[0]
-        diff_x = (self.size_max_x - image.shape[1]) // 2
-        diff_y = (self.size_max_y - image.shape[2]) // 2
-        transform_padding = torch_transforms.Pad((diff_y, diff_x))
+        # diff_x = (self.size_max_x - image.shape[1]) // 2
+        # diff_y = (self.size_max_y - image.shape[2]) // 2
+        # transform_padding = torch_transforms.Pad((diff_y, diff_x))
         # image = transform_padding(image)
         if self.transform != None:
             image = self.transform(image)
-        file_name = os.path.basename(fn)
+        # file_name = os.path.basename(fn)
         # plt.imshow(image[0, :, :])
         # plt.savefig('dapi/' + file_name[:-3] + "png")
         lbl = self.df.iloc[idx][self.lbl_col]

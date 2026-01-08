@@ -198,6 +198,7 @@ def main_worker(args):
     # model.load_state_dict(checkpoint['model'])
 
     train_transform = transforms.Compose([
+        transforms.CenterCrop(7000),
         transforms.Resize((args.img_size, args.img_size)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
