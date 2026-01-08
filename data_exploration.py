@@ -23,7 +23,7 @@ for idx in range(0, train_df.shape[0]):
     # diff_x = (size_max_x - image.shape[1]) // 2
     # diff_y = (size_max_y - image.shape[2]) // 2
     # transform = transforms.Pad((diff_y, diff_x))
-    # image = transform(image)
+    image = transform(image)
     print(image.shape)
     file_name = os.path.basename(filename)
     plt.imshow(image[0, :, :])
