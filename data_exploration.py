@@ -18,12 +18,12 @@ for idx in range(0, train_df.shape[0]):
     image_np = np.load(filename)
     image_np = image_np[which_channels, :, :]
     print(filename, image_np.shape)
-    transforms = transforms.CenterCrop(7000)
+    transformation = transforms.CenterCrop(7000)
     # image = tensor(image_np, dtype=float32)[0]
     # diff_x = (size_max_x - image.shape[1]) // 2
     # diff_y = (size_max_y - image.shape[2]) // 2
     # transform = transforms.Pad((diff_y, diff_x))
-    image = transform(image)
+    image = transformation(image)
     print(image.shape)
     file_name = os.path.basename(filename)
     plt.imshow(image[0, :, :])
