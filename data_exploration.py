@@ -20,7 +20,7 @@ for idx in range(0, train_df.shape[0]):
     print(filename, image_np.shape)
     train_transform = transforms.Compose([
         transforms.CenterCrop(7000),
-        transforms.Resize((args.img_size, args.img_size)),
+        transforms.Resize((1024, 1024)),
         # transforms.ToTensor(),
     ])
     image = tensor(image_np, dtype=float32)[0]
