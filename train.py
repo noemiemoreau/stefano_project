@@ -134,9 +134,9 @@ def main_worker(args):
 
     run = wandb.init(
         # Set the wandb entity where your project will be logged (generally your team name).
-        entity="noemie-moreau96-university-of-cologne",
+        entity="bozek-lab",
         # Set the wandb project where this run will be logged.
-        project="stefano_project",
+        project="DLBCL_project",
         # Track hyperparameters and run metadata.
         config={
             "learning_rate": args.learning_rate, #todo change learning rate
@@ -155,6 +155,9 @@ def main_worker(args):
             "optimizer": "ADAM",
             "scheduler": "ReduceLROnPlateau", #todo change for balanced accuracy?
             "shuffle": True,
+            "train_set" : args.train_csv,
+            "val_set" : args.val_csv,
+            "preprocessing?" : "resizing only, no crop"
         },
     )
 
@@ -198,7 +201,7 @@ def main_worker(args):
     # model.load_state_dict(checkpoint['model'])
 
     train_transform = transforms.Compose([
-        transforms.CenterCrop(7000),
+        # transforms.CenterCrop(7000),
         transforms.Resize((args.img_size, args.img_size)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
@@ -215,6 +218,7 @@ def main_worker(args):
 
     if args.val_csv != 'None':
         val_transform = transforms.Compose([
+            # transforms.CenterCrop(7000),
             transforms.Resize((args.img_size, args.img_size)),
             #transforms.ToTensor(),
         ])
@@ -277,8 +281,8 @@ def get_args():
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
-    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_bis.csv', help='.csv file containing the training examples')
-    parser.add_argument('--val_csv', dest='val_csv', type=str, default='test_bis.csv', help='.csv file containing the val examples')
+    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_cleaned.csv', help='.csv file containing the training examples')
+    parser.add_argument('--val_csv', dest='val_csv', type=str, default='test_cleaned.csv', help='.csv file containing the val examples')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
     parser.add_argument('--ip_address', dest='master_addr', type=str, default='localhost', help='IP address of rank 0 node')
     parser.add_argument('--port', dest='master_port', type=str, default='8888', help='Free port on rank 0 node')
