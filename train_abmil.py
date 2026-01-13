@@ -134,9 +134,9 @@ def main_worker(args):
 
     run = wandb.init(
         # Set the wandb entity where your project will be logged (generally your team name).
-        entity="noemie-moreau96-university-of-cologne",
+        entity="bozek-lab",
         # Set the wandb project where this run will be logged.
-        project="stefano_project",
+        project="DLBCL_project",
         # Track hyperparameters and run metadata.
         config={
             "learning_rate": args.learning_rate, #todo change learning rate
