@@ -155,6 +155,9 @@ def main_worker(args):
             "optimizer": "ADAM",
             "scheduler": "ReduceLROnPlateau", #todo change for balanced accuracy?
             "shuffle": True,
+            "train_set": args.train_csv,
+            "val_set": args.val_csv,
+            "preprocessing?": "resizing only, no crop"
         },
     )
 
@@ -215,6 +218,7 @@ def main_worker(args):
 
     if args.val_csv != 'None':
         val_transform = transforms.Compose([
+            transforms.CenterCrop(7000),
             transforms.Resize((args.img_size, args.img_size)),
             #transforms.ToTensor(),
         ])
