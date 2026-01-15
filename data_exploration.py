@@ -59,7 +59,7 @@ train_transform = transforms.Compose([
 
 which_channels = [list(range(14))]
 
-train_df = pd.read_csv("train_cleaned.csv")
+train_df = pd.read_csv("test_cleaned.csv")
 train_dataset = ImageDataset(train_df, fn_col = 'filename', lbl_col = "relapse", transform = train_transform, return_filename=True)
 train_loader = DataLoader(train_dataset, batch_size=1, num_workers=0, pin_memory=True, shuffle=True)
 
@@ -68,7 +68,7 @@ for i, batch in enumerate(train_loader):
     img_tensor = img_tensor.squeeze(0)
     x, valid_ind = utils.get_valid_patches(img_tensor, 224, 224, rand_offset=False)
     file_name = os.path.basename(filename[0])
-    plot_patches_first_channel(x, save_path= "abmil_patches/"+file_name[:-3] + "png")
+    plot_patches_first_channel(x, save_path= "abmil_patches/test_"+file_name[:-3] + "png")
     print(file_name)
 
 # size_max_x = 9400
