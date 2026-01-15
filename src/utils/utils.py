@@ -24,6 +24,7 @@ def get_valid_patches(img_tensor, tile_size, stride, rand_offset = True):
         x_off, y_off = rng.integers(stride), rng.integers(stride)
     else:
         x_off, y_off = 0, 0
+    print(x_off, y_off)
     img_tensor = img_tensor[..., y_off:, x_off:]
     mask_tensor = np.zeros((img_tensor.shape[1], img_tensor.shape[2]))
     mask_tensor[img_tensor[0] > 10] = 1
