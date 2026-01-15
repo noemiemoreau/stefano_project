@@ -28,6 +28,7 @@ train_loader = DataLoader(train_dataset, batch_size=1, num_workers=0, pin_memory
 
 for i, batch in enumerate(train_loader):
     img_tensor, target, filename = batch[0], batch[1], batch[2]
+    img_tensor = img_tensor.squeeze(0)
     x, valid_ind = utils.get_valid_patches(img_tensor, 224, 224, rand_offset=False)
     print(x.shape)
 
