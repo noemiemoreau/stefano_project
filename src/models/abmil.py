@@ -71,6 +71,7 @@ class ResnetABMIL(nn.Module):
 
         x = x.squeeze(0)
         x, valid_ind = self.get_valid_patches(x)
+        print(x.shape())
         x = self.feature_extractor(x)
         x, A = self.attention_mechanism(x)
         pred = self.classifier(x)
