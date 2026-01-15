@@ -66,8 +66,9 @@ for i, batch in enumerate(train_loader):
     img_tensor, target, filename = batch[0], batch[1], batch[2]
     img_tensor = img_tensor.squeeze(0)
     x, valid_ind = utils.get_valid_patches(img_tensor, 224, 224, rand_offset=False)
-    plot_patches_first_channel(x, save_path= "abmil_patches/"+os.path.basename(filename)[0:3] + ".png")
-    print(os.path.basename(filename)[0:3])
+    file_name = os.path.basename(filename)
+    plot_patches_first_channel(x, save_path= "abmil_patches/"+file_name[:-3] + "png")
+    print(file_name)
 
 # size_max_x = 9400
 # size_max_y= 9400
