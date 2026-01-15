@@ -12,6 +12,42 @@ from torch.utils.data import DataLoader
 # val_df = pd.read_csv("val.csv")
 # test_df = pd.read_csv("test_bis.csv")
 
+def plot_patches_first_channel(patches, normalize=False, cmap='gray', save_path=None):
+    """
+    patches: numpy array (N, C, H, W)
+    Displays only the FIRST channel of each patch in a square grid.
+    If save_path is provided, the figure is saved to that file.
+    """
+
+    N, C, H, W = patches.shape
+    grid_size = int(math.ceil(math.sqrt(N)))
+
+    fig, axes = plt.subplots(grid_size, grid_size, figsize=(10, 10))
+    axes = axes.flatten()
+
+    for i in range(grid_size * grid_size):
+        ax = axes[i]
+        ax.axis('off')
+
+        if i < N:
+            patch = patches[i, 0, :, :]
+
+            if normalize:
+                minv, maxv = patch.min(), patch.max()
+                if maxv > minv:
+                    patch = (patch - minv) / (maxv - minv)
+
+            ax.imshow(patch, cmap=cmap)
+
+    plt.tight_layout()
+
+    # optional saving
+    if save_path is not None:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"Saved plot to: {save_path}")
+
+    # plt.show()
+
 
 train_transform = transforms.Compose([
         transforms.CenterCrop(7000),
@@ -30,7 +66,8 @@ for i, batch in enumerate(train_loader):
     img_tensor, target, filename = batch[0], batch[1], batch[2]
     img_tensor = img_tensor.squeeze(0)
     x, valid_ind = utils.get_valid_patches(img_tensor, 224, 224, rand_offset=False)
-    print(x.shape)
+    plot_patches_first_channel(x, save_path= "abmil_patches/"+os.path.basename(filename)[0:3] + ".png")
+    print(os.path.basename(filename)[0:3])
 
 # size_max_x = 9400
 # size_max_y= 9400
