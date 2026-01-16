@@ -40,7 +40,7 @@ class ImageDataset(Dataset):
         # transform_padding = torch_transforms.Pad((diff_y, diff_x))
         # image = transform_padding(image)
         if self.transform != None:
-            image = self.transform(image=image)
+            image = self.transform(image)
         # file_name = os.path.basename(fn)
         # plt.imshow(image[0, :, :])
         # plt.savefig('dapi/' + file_name[:-3] + "png")
