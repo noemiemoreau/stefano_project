@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 import scipy
+import src.utils as utils
 
 
 train_df = pd.read_csv("train_cleaned.csv")
@@ -35,6 +36,6 @@ for idx in range(0, train_df.shape[0]):
         image[c] = image_c_temp
 
     # z-score normalization
-    image = normalize_quantile(image)
+    image = utils.normalize_quantile(image)
 
     np.save(new_directory + os.path.basename(filename)[0:3] + "_normalized.npy", image)
