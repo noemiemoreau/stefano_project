@@ -9,6 +9,8 @@ test_df = pd.read_csv("test_cleaned.csv")
 
 new_directory = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized/"
 
+aligned_channel = np.bool([1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0])
+
 for idx in range(0, train_df.shape[0]):
     index, filename, label = train_df.iloc[idx][0], train_df.iloc[idx][1], train_df.iloc[idx][2]
     print(filename)
@@ -16,7 +18,7 @@ for idx in range(0, train_df.shape[0]):
                                                                                0:3] + "_aligned.npy"
     image = np.load(new_filename)
     image = np.reshape(image, [20, *np.shape(image)[-2:]])
-    image = image[self.aligned_channel]
+    image = image[aligned_channel]
     # mask the background
     mask = image[0] > 400
     mask = scipy.ndimage.binary_dilation(mask, structure=np.ones((20, 20)))
