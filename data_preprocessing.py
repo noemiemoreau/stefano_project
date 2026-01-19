@@ -24,15 +24,22 @@ for idx in range(0, train_df.shape[0]):
     # mask the background
     mask = image[0] > 400
     mask = scipy.ndimage.binary_dilation(mask, structure=np.ones((20, 20)))
-    mask_connected_components, ncomponents = scipy.ndimage.label(
-        mask)
-    largestCC = mask_connected_components == np.argmax(
-        np.bincount(mask_connected_components.flat)[1:]) + 1
-    mask_connected_components[largestCC == False] = 0
-    mask_connected_components = scipy.ndimage.binary_dilation(mask_connected_components, structure=np.ones((50, 50)))
+    counts = np.bincount(labeled.ravel())
+    small_labels = np.where(counts < 100000)[0]
+    # never remove background (label 0)
+    small_labels = small_labels[small_labels != 0]
+
+    # create output mask
+    mask_clean = labeled.copy()
+    for lbl in small_labels:
+        mask_clean[mask_clean == lbl] = 0
+
+    # binarize for convenience
+    mask_clean = (mask_clean > 0).astype(mask.dtype)
+    mask_clean = scipy.ndimage.binary_dilation(mask_clean, structure=np.ones((50, 50)))
     for c in range(0, image.shape[0]):
         image_c_temp = image[c]
-        image_c_temp[mask_connected_components == 0] = 0
+        image_c_temp[mask_clean == 0] = 0
         image[c] = image_c_temp
 
     # z-score normalization
