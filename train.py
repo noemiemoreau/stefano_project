@@ -201,7 +201,7 @@ def main_worker(args):
     # model.load_state_dict(checkpoint['model'])
 
     train_transform = transforms.Compose([
-        transforms.CenterCrop(7000),
+        transforms.CenterCrop(5000),
         transforms.Resize((args.img_size, args.img_size)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
@@ -218,7 +218,7 @@ def main_worker(args):
 
     if args.val_csv != 'None':
         val_transform = transforms.Compose([
-            transforms.CenterCrop(7000),
+            transforms.CenterCrop(5000),
             transforms.Resize((args.img_size, args.img_size)),
             #transforms.ToTensor(),
         ])
