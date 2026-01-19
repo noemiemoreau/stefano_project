@@ -11,6 +11,7 @@ new_directory = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized/"
 
 for idx in range(0, train_df.shape[0]):
     index, filename, label = train_df.iloc[idx][0], train_df.iloc[idx][1], train_df.iloc[idx][2]
+    print(filename)
     new_filename = "/projects/ag-bozek/sugliano/dlbcl/data/interim/aligned/" + os.path.basename(filename)[
                                                                                0:3] + "_aligned.npy"
     image = np.load(new_filename)
