@@ -6,6 +6,49 @@ from torch import tensor
 
 rng = np.random.default_rng(seed=0)
 
+
+def normalize_quantile(x):
+    '''
+    Clip and normalize an array to its 1% - 99.5%
+    '''
+    array = x  # .numpy()
+    out = np.zeros_like(array)
+    for c in range(array.shape[0]):
+        channel = array[c]
+        mask = channel > 0  # non-background pixels
+
+        if mask.sum() == 0:
+            continue  # skip if whole channel is background
+
+        vals = channel[mask]
+
+        # ---- Percentile-based clipping ----
+        p_low = np.quantile(vals, 0.01)
+        p_high = np.quantile(vals, 0.99)
+
+        clipped = np.clip(channel, min=p_low, max=p_high)
+
+        # ---- Z-score normalization on clipped values ----
+        vals_clipped = clipped[mask]
+        mean = np.mean(vals_clipped)
+        std = np.std(vals_clipped)
+
+        norm = ((clipped - mean) / (std + 1e-6))
+
+        # ---- rescale to [0, 255] ----
+        vals_norm = norm[mask]
+        norm_min = np.min(vals_norm)
+        norm_max = np.max(vals_norm)
+        rescaled = (norm - norm_min) / (norm_max - norm_min + 1e-6)  # → [0,1]
+
+        # ---- reserve 0 for background ----
+        rescaled[mask] = rescaled[mask] * 254 + 1  # → [1..255]
+        rescaled[~mask] = 0  # → background
+
+        out[c] = rescaled
+
+    return out
+
 def get_patches(tensor, tile_size, stride, return_unfold_shape = False):
     dims = tensor.dim()
     tensor_unfold = tensor.unfold(dims-2, size = tile_size, step = stride).unfold(dims-1, size = tile_size, step = stride)
