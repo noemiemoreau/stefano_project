@@ -24,6 +24,8 @@ for idx in range(0, train_df.shape[0]):
     # mask the background
     mask = image[0] > 400
     mask = scipy.ndimage.binary_dilation(mask, structure=np.ones((20, 20)))
+    labeled, ncomponents = scipy.ndimage.label(
+        mask)
     counts = np.bincount(labeled.ravel())
     small_labels = np.where(counts < 100000)[0]
     # never remove background (label 0)
