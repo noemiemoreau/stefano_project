@@ -5,7 +5,7 @@ import torchvision.transforms as torch_transforms
 import matplotlib.pyplot as plt
 import os
 import src.utils as utils
-
+import scipy
 # dict_channel = { "DAPI" : 0, "CD8A" : 1905, "CD31" : 1651, "LAMIN_B" : -1, "CD11B" : 2802, "CD3D" : 1322, "CD20" : 3200,
 # "CD163" : 5032, "CD68" : 2527, "CD204" : 1277, "CD4" : 4282, "FOXP3" : 6051, "LAMIN_AC" : -1, "PDL\_1" : 2372 }
 
