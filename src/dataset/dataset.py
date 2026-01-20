@@ -35,6 +35,7 @@ class ImageDataset(Dataset):
         fn = self.df.iloc[idx][self.fn_col]
         new_filename = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized/" + os.path.basename(fn)[
                                                                                    0:3] + "_normalized.npy"
+        print(new_filename)
         image = np.load(new_filename)
         image = image[self.which_channels, :, :]
         image = tensor(image, dtype=float32)[0]
