@@ -47,4 +47,6 @@ for idx in range(0, test_df.shape[0]):
     # z-score normalization
     image = utils.normalize_quantile(image)
 
+    image = image.astype(np.uint8)
+
     np.save(new_directory + os.path.basename(filename)[0:3] + "_normalized.npy", image)
