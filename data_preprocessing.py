@@ -13,8 +13,8 @@ new_directory = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized/"
 
 aligned_channel = np.bool([1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0])
 
-for idx in range(0, train_df.shape[0]):
-    index, filename, label = train_df.iloc[idx][0], train_df.iloc[idx][1], train_df.iloc[idx][2]
+for idx in range(0, test_df.shape[0]):
+    index, filename, label = test_df.iloc[idx][0], test_df.iloc[idx][1], test_df.iloc[idx][2]
     print(filename)
     new_filename = "/projects/ag-bozek/sugliano/dlbcl/data/interim/aligned/" + os.path.basename(filename)[
                                                                                0:3] + "_aligned.npy"
