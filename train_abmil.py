@@ -157,7 +157,7 @@ def main_worker(args):
             "shuffle": True,
             "train_set": args.train_csv,
             "val_set": args.val_csv,
-            "preprocessing?": "resizing + crop"
+            "preprocessing?": "resizing + crop + normalization"
         },
     )
 

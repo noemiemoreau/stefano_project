@@ -70,7 +70,7 @@ def get_valid_patches(img_tensor, tile_size, stride, rand_offset = True):
     # print(x_off, y_off)
     img_tensor = img_tensor[..., y_off:, x_off:]
     mask_tensor = np.zeros((img_tensor.shape[1], img_tensor.shape[2]))
-    mask_tensor[img_tensor[0] > 10] = 1
+    mask_tensor[img_tensor[0] > 0] = 1
     img_patches = get_patches(img_tensor, tile_size, stride)
     mask_patches = get_patches(tensor(np.array([mask_tensor])), tile_size, stride)
     mask_patches_areas = calculate_areas(mask_patches)
