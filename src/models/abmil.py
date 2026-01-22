@@ -45,7 +45,7 @@ class ResnetABMIL(nn.Module):
         super(ResnetABMIL, self).__init__()
 
 
-        resnet = models.resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1, progress = progress, **kwargs)
+        resnet = models.resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1, progress = progress) #, **kwargs)
         resnet.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         if freeze_resnet:
             for param in resnet.parameters():
