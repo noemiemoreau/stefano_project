@@ -87,9 +87,9 @@ def validate_step(val_loader, model, criterion):
             targets.append(target)
             print("target: ", target)
             output = model(img_tensor)
-            print("output: ", output)
             if isinstance(output, (tuple, list)):
                 output = output[0]
+                print("output: ", output)
             loss = criterion(output, target)
             print("loss: ", loss)
             val_epoch_loss += loss.item()
