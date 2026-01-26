@@ -6,6 +6,28 @@ from torch import tensor
 
 rng = np.random.default_rng(seed=0)
 
+def list_subdir_filter(source_folder, check_subfolders: bool = False, search_pattern: str = ''):
+    """
+    Simple wrapper for os.walk() or os.listdir() according to whether one wants to scan subfolders.
+    It includes a basic re.search() for filtering purposes.
+    :param source_folder: the folder to scan for content
+    :param check_subfolders: bool, whether subfolders of source_folder should be checked for files (recursively!)
+    :param search_pattern: str,
+    :return:
+    """
+    if check_subfolders:
+        all_items = []
+        for path, subdirs, files in os.walk(source_folder):
+            for filename in files:
+                if re.search(search_pattern, filename):
+                    all_items.append(os.path.join(path, filename))
+    else:
+        all_items = [
+            os.path.join(source_folder, filename)
+            for filename in os.listdir(source_folder)
+            if re.search(search_pattern, filename)
+        ]
+    return sorted(all_items)
 
 def normalize_quantile(x):
     '''
