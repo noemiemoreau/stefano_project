@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from   pathlib import Path
 import re
-from   src.utils import list_subdir_filter as lsd
+from   src.utils import list_subdir_filter as lsd, flatten
 
 class metadata:
 

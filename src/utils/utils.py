@@ -6,6 +6,13 @@ from torch import tensor
 
 rng = np.random.default_rng(seed=0)
 
+def flatten(S):
+    if S == []:
+        return S
+    if isinstance(S[0], list):
+        return flatten(S[0]) + flatten(S[1:])
+    return S[:1] + flatten(S[1:])
+
 def list_subdir_filter(source_folder, check_subfolders: bool = False, search_pattern: str = ''):
     """
     Simple wrapper for os.walk() or os.listdir() according to whether one wants to scan subfolders.
