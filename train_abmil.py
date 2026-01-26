@@ -197,8 +197,8 @@ def main_worker(args):
     # model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
 
     #remove this part later
-    # checkpoint = torch.load("checkpoints/hg7usvyq/checkpoint_40.pth.tar")
-    # model.load_state_dict(checkpoint['model'])
+    checkpoint = torch.load("checkpoints/tmtwz9sl/checkpoint_23.pth.tar")
+    model.load_state_dict(checkpoint['model'])
 
     train_transform = transforms.Compose([
         transforms.CenterCrop(5000),
