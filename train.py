@@ -281,7 +281,7 @@ def get_args():
     parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.001, help='Learning rate')
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
-    parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
+    parser.add_argument('--batch_size', type=int, nargs='?', default=1, help='Batch size', dest='batch_size')
     parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_cleaned.csv', help='.csv file containing the training examples')
     parser.add_argument('--val_csv', dest='val_csv', type=str, default='test_cleaned.csv', help='.csv file containing the val examples')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
