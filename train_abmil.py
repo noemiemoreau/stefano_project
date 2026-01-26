@@ -277,7 +277,7 @@ def get_args():
     parser.add_argument('--weighted_sampler_label', dest='weighted_sampler_label', type=str, default='None', help='Additional label in the train .csv to weight the sampling')
     parser.add_argument('--gpus', dest='gpus', type=int, default=4, help='Number of GPUs')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs', dest='epochs')
-    parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.00001, help='Learning rate')
+    parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.0001, help='Learning rate')
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=1, help='Batch size', dest='batch_size')
