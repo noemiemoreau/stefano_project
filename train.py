@@ -197,8 +197,8 @@ def main_worker(args):
     # model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
 
     #remove this part later
-    # checkpoint = torch.load("checkpoints/hg7usvyq/checkpoint_40.pth.tar")
-    # model.load_state_dict(checkpoint['model'])
+    checkpoint = torch.load("checkpoints/ibmv8i45/checkpoint_99.pth.tar")
+    model.load_state_dict(checkpoint['model'])
 
     train_transform = transforms.Compose([
         transforms.CenterCrop(5000),
@@ -235,8 +235,8 @@ def main_worker(args):
     epoch0 = 0
     epoch = epoch0
     while epoch < epoch0 + args.epochs:
-
-        train_phase_results = train_step(train_loader, model, criterion, optimizer)
+        train_phase_results = {'Loss': '', 'Accuracy': '', "Balanced_acc": ""}
+        # train_phase_results = train_step(train_loader, model, criterion, optimizer)
         val_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
@@ -287,7 +287,7 @@ def get_args():
     parser.add_argument('--ip_address', dest='master_addr', type=str, default='localhost', help='IP address of rank 0 node')
     parser.add_argument('--port', dest='master_port', type=str, default='8888', help='Free port on rank 0 node')
     parser.add_argument('--num_workers', dest='num_workers', type=int, default=0, help='Number of workers for loading data')
-    parser.add_argument('--img_size', dest='img_size', type=int, default=2048, help='Input image size for the model')
+    parser.add_argument('--img_size', dest='img_size', type=int, default=1024, help='Input image size for the model')
     return parser.parse_args()
 
 
