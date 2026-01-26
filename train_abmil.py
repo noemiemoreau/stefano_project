@@ -235,8 +235,8 @@ def main_worker(args):
     epoch0 = 0
     epoch = epoch0
     while epoch < epoch0 + args.epochs:
-
-        train_phase_results = train_step(train_loader, model, criterion, optimizer)
+        train_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
+        # train_phase_results = train_step(train_loader, model, criterion, optimizer)
         val_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
