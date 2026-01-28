@@ -33,7 +33,7 @@ class ImageDataset(Dataset):
 
     def __getitem__(self, idx):
         fn = self.df.iloc[idx][self.fn_col]
-        new_filename = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized/" + os.path.basename(fn)[
+        new_filename = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized_old/" + os.path.basename(fn)[
                                                                                    0:3] + "_normalized.npy"
         image = np.load(new_filename)
         image = image[self.which_channels, :, :]
