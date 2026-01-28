@@ -83,18 +83,18 @@ def validate_step(val_loader, model, criterion):
     with torch.no_grad():
         for i, batch in enumerate(val_loader):
             img_tensor, target, filename = batch[0].cuda(), batch[1].cuda(), batch[2]
-            print("filename: ", filename)
+            # print("filename: ", filename)
             targets.append(target)
-            print("target: ", target)
+            # print("target: ", target)
             output = model(img_tensor)
-            print("output: ", output)
+            # print("output: ", output)
             if isinstance(output, (tuple, list)):
                 output = output[0]
             loss = criterion(output, target)
-            print("loss: ", loss)
+            # print("loss: ", loss)
             val_epoch_loss += loss.item()
             predicted_classes = torch.max(output, dim = 1)[1]
-            print("predicted_class: ", predicted_classes)
+            # print("predicted_class: ", predicted_classes)
             outputs.append(predicted_classes)
             acc += (predicted_classes == target).sum()
             tests += len(predicted_classes)
@@ -198,8 +198,8 @@ def main_worker(args):
     # model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
 
     #remove this part later
-    checkpoint = torch.load("checkpoints/ibmv8i45/checkpoint_99.pth.tar")
-    model.load_state_dict(checkpoint['model'])
+    # checkpoint = torch.load("checkpoints/ibmv8i45/checkpoint_99.pth.tar")
+    # model.load_state_dict(checkpoint['model'])
 
     train_transform = transforms.Compose([
         transforms.CenterCrop(5000),
@@ -237,7 +237,7 @@ def main_worker(args):
     epoch = epoch0
     while epoch < epoch0 + args.epochs:
         train_phase_results = {'Loss': '', 'Accuracy': '', "Balanced_acc": ""}
-        # train_phase_results = train_step(train_loader, model, criterion, optimizer)
+        train_phase_results = train_step(train_loader, model, criterion, optimizer)
         val_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
@@ -281,7 +281,7 @@ def get_args():
     parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.001, help='Learning rate')
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
-    parser.add_argument('--batch_size', type=int, nargs='?', default=1, help='Batch size', dest='batch_size')
+    parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
     parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_cleaned.csv', help='.csv file containing the training examples')
     parser.add_argument('--val_csv', dest='val_csv', type=str, default='test_cleaned.csv', help='.csv file containing the val examples')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
