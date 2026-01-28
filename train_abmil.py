@@ -83,18 +83,18 @@ def validate_step(val_loader, model, criterion):
     with torch.no_grad():
         for i, batch in enumerate(val_loader):
             img_tensor, target, filename = batch[0].cuda(), batch[1].cuda(), batch[2]
-            print("filename: ", filename)
+            # print("filename: ", filename)
             targets.append(target)
-            print("target: ", target)
+            # print("target: ", target)
             output = model(img_tensor)
             if isinstance(output, (tuple, list)):
                 output = output[0]
-                print("output: ", output)
+                # print("output: ", output)
             loss = criterion(output, target)
-            print("loss: ", loss)
+            # print("loss: ", loss)
             val_epoch_loss += loss.item()
             predicted_classes = torch.max(output, dim = 1)[1]
-            print("predicted_class: ", predicted_classes)
+            # print("predicted_class: ", predicted_classes)
             outputs.append(predicted_classes)
             acc += (predicted_classes == target).sum()
             tests += len(predicted_classes)
@@ -198,8 +198,8 @@ def main_worker(args):
     # model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
 
     #remove this part later
-    checkpoint = torch.load("checkpoints/tmtwz9sl/checkpoint_14.pth.tar")
-    model.load_state_dict(checkpoint['model'])
+    # checkpoint = torch.load("checkpoints/tmtwz9sl/checkpoint_14.pth.tar")
+    # model.load_state_dict(checkpoint['model'])
 
     train_transform = transforms.Compose([
         transforms.CenterCrop(5000),
@@ -237,7 +237,7 @@ def main_worker(args):
     epoch = epoch0
     while epoch < epoch0 + args.epochs:
         train_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
-        # train_phase_results = train_step(train_loader, model, criterion, optimizer)
+        train_phase_results = train_step(train_loader, model, criterion, optimizer)
         val_phase_results = {'Loss': '', 'Accuracy' : '', "Balanced_acc": ""}
         if args.val_csv != 'None':
             val_phase_results = validate_step(val_loader, model, criterion)
