@@ -33,15 +33,16 @@ class ImageDataset(Dataset):
 
     def __getitem__(self, idx):
         fn = self.df.iloc[idx][self.fn_col]
-        new_filename = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized_old/" + os.path.basename(fn)[
-                                                                                   0:3] + "_normalized.npy"
-        image = np.load(new_filename)
+        print(idx, fn)
+        # new_filename = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized/" + os.path.basename(fn)[
+        #                                                                            0:3] + "_normalized.npy"
+        image = np.load(fn)
         image = image[self.which_channels, :, :]
         image = tensor(image, dtype=float32)[0]
         if self.transform != None:
             image = self.transform(image)
         lbl = self.df.iloc[idx][self.lbl_col]
-        out_tuple = (image, lbl, new_filename) if self.return_filename else (image, lbl)
+        out_tuple = (image, lbl, fn) if self.return_filename else (image, lbl)
         return out_tuple
     
     def df(self):

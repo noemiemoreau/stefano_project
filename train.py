@@ -210,7 +210,7 @@ def main_worker(args):
     ])
 
     train_df = pd.read_csv(args.train_csv)
-    train_dataset = ImageDataset(train_df, fn_col = 'filename', lbl_col = args.task, transform = train_transform, return_filename=True)
+    train_dataset = ImageDataset(train_df, fn_col = 'new_filename', lbl_col = args.task, transform = train_transform, return_filename=True)
     if args.weighted_sampler_label == 'None':
         args.weighted_sampler_label = args.task
     # weights = calculate_weights(torch.tensor(train_df[args.weighted_sampler_label].values))
@@ -224,7 +224,7 @@ def main_worker(args):
             #transforms.ToTensor(),
         ])
         val_df = pd.read_csv(args.val_csv)
-        val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform, return_filename=True)
+        val_dataset = ImageDataset(val_df, fn_col = 'new_filename', lbl_col = args.task, transform = val_transform, return_filename=True)
         # val_sampler = DistributedSampler(val_dataset, num_replicas=args.gpus, rank=proc_index, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
     
@@ -274,7 +274,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='Train HER2 overexpression classifier',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--model', dest='model', type=str, default='resnet34', help='resnet34 or abmil')
-    parser.add_argument('--task', dest='task', type=str, default='relapse', help='ihc-score or her2-status')
+    parser.add_argument('--task', dest='task', type=str, default='hans_binary', help='ihc-score or her2-status')
     parser.add_argument('--weighted_sampler_label', dest='weighted_sampler_label', type=str, default='None', help='Additional label in the train .csv to weight the sampling')
     parser.add_argument('--gpus', dest='gpus', type=int, default=4, help='Number of GPUs')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs', dest='epochs')
@@ -282,8 +282,8 @@ def get_args():
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
-    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_cleaned.csv', help='.csv file containing the training examples')
-    parser.add_argument('--val_csv', dest='val_csv', type=str, default='test_cleaned.csv', help='.csv file containing the val examples')
+    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_hans_test.csv', help='.csv file containing the training examples')
+    parser.add_argument('--val_csv', dest='val_csv', type=str, default='train_hans_test.csv', help='.csv file containing the val examples')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
     parser.add_argument('--ip_address', dest='master_addr', type=str, default='localhost', help='IP address of rank 0 node')
     parser.add_argument('--port', dest='master_port', type=str, default='8888', help='Free port on rank 0 node')
