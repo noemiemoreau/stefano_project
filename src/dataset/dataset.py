@@ -34,9 +34,8 @@ class ImageDataset(Dataset):
     def __getitem__(self, idx):
         fn = self.df.iloc[idx][self.fn_col]
         print(idx, fn)
-        # new_filename = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized/" + os.path.basename(fn)[
-        #                                                                            0:3] + "_normalized.npy"
-        image = np.load(fn)
+        new_filename = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized/" + os.path.basename(fn)
+        image = np.load(new_filename)
         image = image[self.which_channels, :, :]
         image = tensor(image, dtype=float32)[0]
         if self.transform != None:
