@@ -226,7 +226,7 @@ def main_worker(args):
             #transforms.ToTensor(),
         ])
         val_df = pd.read_csv(args.val_csv)
-        val_dataset = ImageDataset(val_df, fn_col = 'new_filename', lbl_col = args.task, transform = val_transform, return_filename=True)
+        val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform, return_filename=True)
         # val_sampler = DistributedSampler(val_dataset, num_replicas=args.gpus, rank=proc_index, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
     
