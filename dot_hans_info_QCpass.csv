@@ -1,4 +1,4 @@
-,index,patient_index,unique_id,hans_classifier,future_relapse_1yes_0no,tissue_type_1primary_2relapse,survival_months,filename,QC_pass
+,index_id,patient_index,unique_id,hans_classifier,future_relapse_1yes_0no,tissue_type_1primary_2relapse,survival_months,filename,QC_pass
 0,2,1,DLBCL1_0,ABC,0.0,1.0,2.0,/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/002_for_resnet.npy,True
 1,3,1,DLBCL1_1,ABC,0.0,1.0,2.0,/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/003_for_resnet.npy,True
 2,4,1,DLBCL1_2,ABC,0.0,1.0,2.0,/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/004_for_resnet.npy,True
