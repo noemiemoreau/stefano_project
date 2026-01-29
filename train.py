@@ -182,6 +182,8 @@ def main_worker(args):
         args.num_classes = 4
     elif args.task == 'relapse':
         args.num_classes = 2
+    elif args.task == 'hans_binary':
+        args.num_classes = 2
     else:
         raise ValueError('Task should be ihc-score or her-status')
 
