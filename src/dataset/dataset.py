@@ -33,7 +33,6 @@ class ImageDataset(Dataset):
 
     def __getitem__(self, idx):
         fn = self.df.iloc[idx][self.fn_col]
-        print(idx, fn)
         image = np.load(fn)
         image = image[self.which_channels, :, :]
         image = tensor(image, dtype=float32)[0]
