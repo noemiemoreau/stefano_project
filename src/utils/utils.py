@@ -108,7 +108,7 @@ def get_valid_patches(img_tensor, tile_size, stride, rand_offset = True):
     area_th = 0.05 * tile_size * tile_size
     valid_mask_indices = mask_patches_areas > area_th
     mask_patches = mask_patches[valid_mask_indices].view(*list(mask_patches.shape)[:-3], -1, tile_size, tile_size)
-    valid_img_indices = torch.cat(14 * [valid_mask_indices], dim=0)
+    valid_img_indices = torch.cat(img_tensor.shape[0] * [valid_mask_indices], dim=0)
     img_patches = img_patches[valid_img_indices].view(*list(img_patches.shape)[:-3], -1, tile_size, tile_size)
     img_patches = img_patches.permute(1, 0, 2, 3)
     return img_patches, valid_mask_indices
