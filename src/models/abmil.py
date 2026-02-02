@@ -62,7 +62,6 @@ class ResnetABMIL(nn.Module):
     def get_valid_patches(self, x):
         rand_offset = True if self.training else False
         x, valid_ind = utils.get_valid_patches(x.cpu(), self.patch_size, self.patch_size, rand_offset = rand_offset)
-        print(x.shape)
         return x.cuda(), valid_ind
     
     def forward(self, x):
