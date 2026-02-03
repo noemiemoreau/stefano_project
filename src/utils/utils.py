@@ -57,26 +57,30 @@ def normalize_quantile(x):
         p_low = np.quantile(vals, 0.01)
         p_high = np.quantile(vals, 0.99)
 
-        clipped = np.clip(channel, min=p_low, max=p_high)
+        clipped = np.clip(channel, min=0, max=p_high)
+        clipped = clipped / p_high
+        clipped = (clipped * 255).astype(np.uint8)
 
-        # ---- Z-score normalization on clipped values ----
-        vals_clipped = clipped[mask]
-        mean = np.mean(vals_clipped)
-        std = np.std(vals_clipped)
+        out[c] = clipped
 
-        norm = ((clipped - mean) / (std + 1e-6))
-
-        # ---- rescale to [0, 255] ----
-        vals_norm = norm[mask]
-        norm_min = np.min(vals_norm)
-        norm_max = np.max(vals_norm)
-        rescaled = (norm - norm_min) / (norm_max - norm_min + 1e-6)  # → [0,1]
-
-        # ---- reserve 0 for background ----
-        rescaled[mask] = rescaled[mask] * 254 + 1  # → [1..255]
-        rescaled[~mask] = 0  # → background
-
-        out[c] = rescaled
+        # # ---- Z-score normalization on clipped values ----
+        # vals_clipped = clipped[mask]
+        # mean = np.mean(vals_clipped)
+        # std = np.std(vals_clipped)
+        #
+        # norm = ((clipped - mean) / (std + 1e-6))
+        #
+        # # ---- rescale to [0, 255] ----
+        # vals_norm = norm[mask]
+        # norm_min = np.min(vals_norm)
+        # norm_max = np.max(vals_norm)
+        # rescaled = (norm - norm_min) / (norm_max - norm_min + 1e-6)  # → [0,1]
+        #
+        # # ---- reserve 0 for background ----
+        # rescaled[mask] = rescaled[mask] * 254 + 1  # → [1..255]
+        # rescaled[~mask] = 0  # → background
+        #
+        # out[c] = rescaled
 
     return out
 

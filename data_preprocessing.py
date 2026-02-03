@@ -7,7 +7,7 @@ import src.utils as utils
 
 dir_aligned = "/projects/ag-bozek/sugliano/dlbcl/data/interim/aligned/"
 
-new_directory = "/projects/ag-bozek/nmoreau/dlbcl/data/normalized/"
+new_directory = "/projects/ag-bozek/nmoreau/dlbcl/data/clipped/"
 
 aligned_channel = np.bool([1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0])
 
@@ -43,9 +43,9 @@ for filename in os.listdir(dir_aligned):
         # z-score normalization
         image = utils.normalize_quantile(image)
 
-        image = image.astype(np.uint8)
+        # image = image.astype(np.uint8)
 
-        np.save(new_directory + filename[0:3] + "_normalized.npy", image)
+        np.save(new_directory + filename[0:3] + "_clipped.npy", image)
 
 
 # train_df = pd.read_csv("train_cleaned.csv")
