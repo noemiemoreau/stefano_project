@@ -202,10 +202,14 @@ def main_worker(args):
     #remove this part later
     # checkpoint = torch.load("checkpoints/ibmv8i45/checkpoint_99.pth.tar")
     # model.load_state_dict(checkpoint['model'])
-
+    mean = [66.2312, 137.3732, 114.7684,  81.3650, 156.2162,  99.3527, 139.8230,
+            135.6715,  49.1512, 128.7142, 119.5229, 113.2909, 144.4076, 130.0974]
+    std = [56.7030, 54.3599, 61.6833, 55.8182, 57.0713, 50.7678, 53.6023, 53.5374,
+         39.7448, 59.3803, 48.3824, 47.8027, 57.2941, 49.5931]
     train_transform = transforms.Compose([
         transforms.CenterCrop(5000),
         transforms.Resize((args.img_size, args.img_size)),
+        transforms.Normalize(mean, std),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
         # transforms.ToTensor(),
@@ -223,6 +227,7 @@ def main_worker(args):
         val_transform = transforms.Compose([
             transforms.CenterCrop(5000),
             transforms.Resize((args.img_size, args.img_size)),
+            transforms.Normalize(mean, std),
             #transforms.ToTensor(),
         ])
         val_df = pd.read_csv(args.val_csv)
