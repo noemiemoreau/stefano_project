@@ -202,10 +202,10 @@ def main_worker(args):
     #remove this part later
     # checkpoint = torch.load("checkpoints/ibmv8i45/checkpoint_99.pth.tar")
     # model.load_state_dict(checkpoint['model'])
-    mean = [66.2312, 137.3732, 114.7684,  81.3650, 156.2162,  99.3527, 139.8230,
-            135.6715,  49.1512, 128.7142, 119.5229, 113.2909, 144.4076, 130.0974]
-    std = [56.7030, 54.3599, 61.6833, 55.8182, 57.0713, 50.7678, 53.6023, 53.5374,
-         39.7448, 59.3803, 48.3824, 47.8027, 57.2941, 49.5931]
+    mean = [ 60.1976, 120.2014, 103.0581,  76.7479, 145.5347, 112.5264, 144.9628,
+         127.3409,  53.1630, 144.0218, 111.1871, 125.4579, 134.6648, 133.0389]
+    std = [56.2254, 54.2254, 47.3853, 53.8022, 54.0022, 48.1101, 53.4882, 51.5245,
+         38.4545, 60.6355, 47.2878, 47.2716, 52.5021, 46.8046]
     train_transform = transforms.Compose([
         transforms.CenterCrop(5000),
         transforms.Resize((args.img_size, args.img_size)),
@@ -285,12 +285,12 @@ def get_args():
     parser.add_argument('--weighted_sampler_label', dest='weighted_sampler_label', type=str, default='None', help='Additional label in the train .csv to weight the sampling')
     parser.add_argument('--gpus', dest='gpus', type=int, default=4, help='Number of GPUs')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs', dest='epochs')
-    parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.00001, help='Learning rate')
+    parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.0001, help='Learning rate')
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
-    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_hans_test.csv', help='.csv file containing the training examples')
-    parser.add_argument('--val_csv', dest='val_csv', type=str, default='val_hans_test.csv', help='.csv file containing the val examples')
+    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_hans.csv', help='.csv file containing the training examples')
+    parser.add_argument('--val_csv', dest='val_csv', type=str, default='val_hans.csv', help='.csv file containing the val examples')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
     parser.add_argument('--ip_address', dest='master_addr', type=str, default='localhost', help='IP address of rank 0 node')
     parser.add_argument('--port', dest='master_port', type=str, default='8888', help='Free port on rank 0 node')
