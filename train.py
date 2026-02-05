@@ -6,7 +6,7 @@ import torch
 import torch.distributed as dist
 from torch.utils.data import DataLoader, DistributedSampler
 from torch.nn.parallel import DistributedDataParallel
-from torch.nn import CrossEntropyLoss, Conv2d
+from torch.nn import CrossEntropyLoss, Conv2d, Linear
 from torchvision.models import resnet34
 from torchvision import transforms
 from torchvision import models
@@ -190,7 +190,7 @@ def main_worker(args):
 
     if args.model == 'resnet34':
         model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1)#, num_classes = args.num_classes)
-        model.fc = nn.Linear(model.fc.in_features, args.num_classes)
+        model.fc = Linear(model.fc.in_features, args.num_classes)
         #for more channel we would need to change the first conv ->
         # model.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         model = model.cuda()
