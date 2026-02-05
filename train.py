@@ -38,7 +38,7 @@ def train_step(train_loader, model, criterion, optimizer):
         #print(output)
         if isinstance(output, (tuple, list)):
             output = output[0]
-        print(output)
+        # print(output)
         optimizer.zero_grad()
         loss = criterion(output, target)
         #print(loss)
@@ -188,9 +188,9 @@ def main_worker(args):
         raise ValueError('Task should be ihc-score or her-status')
 
     if args.model == 'resnet34':
-        model = resnet34(weights = None, num_classes = args.num_classes)
+        model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1, num_classes = args.num_classes)
         #for more channel we would need to change the first conv ->
-        model.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        # model.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         model = model.cuda()
     elif args.model == 'abmil':
         model = ResnetABMIL(num_classes = args.num_classes).cuda()
@@ -208,10 +208,13 @@ def main_worker(args):
     #remove this part later
     # checkpoint = torch.load("checkpoints/ibmv8i45/checkpoint_99.pth.tar")
     # model.load_state_dict(checkpoint['model'])
-    mean = [ 60.1976, 120.2014, 103.0581,  76.7479, 145.5347, 112.5264, 144.9628,
-         127.3409,  53.1630, 144.0218, 111.1871, 125.4579, 134.6648, 133.0389]
-    std = [56.2254, 54.2254, 47.3853, 53.8022, 54.0022, 48.1101, 53.4882, 51.5245,
-         38.4545, 60.6355, 47.2878, 47.2716, 52.5021, 46.8046]
+    # mean = [ 60.1976, 120.2014, 103.0581,  76.7479, 145.5347, 112.5264, 144.9628,
+    #      127.3409,  53.1630, 144.0218, 111.1871, 125.4579, 134.6648, 133.0389]
+    # std = [56.2254, 54.2254, 47.3853, 53.8022, 54.0022, 48.1101, 53.4882, 51.5245,
+    #      38.4545, 60.6355, 47.2878, 47.2716, 52.5021, 46.8046]
+    mean = [ 60.1976, 120.2014, 144.9628]
+    std = [56.2254, 54.2254, 53.4882]
+
     train_transform = transforms.Compose([
         transforms.CenterCrop(5000),
         transforms.Resize((args.img_size, args.img_size)),
@@ -222,7 +225,7 @@ def main_worker(args):
     ])
 
     train_df = pd.read_csv(args.train_csv)
-    train_dataset = ImageDataset(train_df, fn_col = 'filename', lbl_col = args.task, transform = train_transform, return_filename=True)
+    train_dataset = ImageDataset(train_df, fn_col = 'filename', lbl_col = args.task, transform = train_transform, return_filename=True, which_channels = [[0, 1, 6]])
     if args.weighted_sampler_label == 'None':
         args.weighted_sampler_label = args.task
     # weights = calculate_weights(torch.tensor(train_df[args.weighted_sampler_label].values))
@@ -237,7 +240,7 @@ def main_worker(args):
             #transforms.ToTensor(),
         ])
         val_df = pd.read_csv(args.val_csv)
-        val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform, return_filename=True)
+        val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform, return_filename=True, which_channels = [[0, 1, 6]])
         # val_sampler = DistributedSampler(val_dataset, num_replicas=args.gpus, rank=proc_index, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
     
