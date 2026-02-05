@@ -225,8 +225,8 @@ def main_worker(args):
         transforms.CenterCrop(5000),
         transforms.Resize((args.img_size, args.img_size)),
         # transforms.Normalize(mean, std),
-        # transforms.RandomHorizontalFlip(),
-        # transforms.RandomVerticalFlip(),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomVerticalFlip(),
         # transforms.ToTensor(),
     ])
 
