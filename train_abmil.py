@@ -142,6 +142,8 @@ def main_worker(args):
         config={
             "learning_rate": args.learning_rate, #todo change learning rate
             "architecture": args.model,
+            "pretrained": True,
+            "frozen": True,
             "dataset": "DLBCL",
             "nb_channel": 3,
             "epochs": args.epochs,
@@ -149,7 +151,7 @@ def main_worker(args):
             "batch_size": args.batch_size, #todo larger batch?
             "image_size": args.img_size,
             "num_workers": args.num_workers,
-            "weight_decay": 1e-8,
+            "weight_decay": 1e-4,
             "scheduler_factor": args.scheduler_factor,
             "scheduler_patience": args.scheduler_patience,
             "loss": "Cross_entropy", #todo change loss
@@ -230,7 +232,7 @@ def main_worker(args):
         # val_sampler = DistributedSampler(val_dataset, num_replicas=args.gpus, rank=proc_index, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
     
-    optimizer = torch.optim.Adam(model.parameters(), lr = args.learning_rate, weight_decay=1e-8)
+    optimizer = torch.optim.Adam(model.parameters(), lr = args.learning_rate, weight_decay=1e-4)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', factor=args.scheduler_factor, patience=args.scheduler_patience, min_lr=1e-15)
 
     criterion = CrossEntropyLoss()
@@ -280,7 +282,7 @@ def get_args():
     parser.add_argument('--weighted_sampler_label', dest='weighted_sampler_label', type=str, default='None', help='Additional label in the train .csv to weight the sampling')
     parser.add_argument('--gpus', dest='gpus', type=int, default=4, help='Number of GPUs')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs', dest='epochs')
-    parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.00001, help='Learning rate')
+    parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=1e-3, help='Learning rate')
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=1, help='Batch size', dest='batch_size')

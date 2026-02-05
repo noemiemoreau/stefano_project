@@ -41,7 +41,7 @@ class GatedAttention(nn.Module):
 
     
 class ResnetABMIL(nn.Module):
-    def __init__(self, hidden_size = 256, patch_size = 224, freeze_resnet = False, pretrained = False, progress = True, **kwargs):
+    def __init__(self, hidden_size = 256, patch_size = 224, freeze_resnet = True, pretrained = False, progress = True, **kwargs):
         super(ResnetABMIL, self).__init__()
 
 
