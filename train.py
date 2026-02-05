@@ -38,7 +38,7 @@ def train_step(train_loader, model, criterion, optimizer):
         #print(output)
         if isinstance(output, (tuple, list)):
             output = output[0]
-        #print(output)
+        print(output)
         optimizer.zero_grad()
         loss = criterion(output, target)
         #print(loss)
@@ -195,7 +195,13 @@ def main_worker(args):
     elif args.model == 'abmil':
         model = ResnetABMIL(num_classes = args.num_classes).cuda()
     else:
-        raise ValueError('Model should be resnet34 or abmil')  
+        raise ValueError('Model should be resnet34 or abmil')
+
+    for m in model.modules():
+        if isinstance(m, torch.nn.BatchNorm2d):
+            m.eval()
+            for p in m.parameters():
+                p.requires_grad = False
 
     # model = DistributedDataParallel(model, device_ids=[proc_index], output_device=proc_index)
 
@@ -210,8 +216,8 @@ def main_worker(args):
         transforms.CenterCrop(5000),
         transforms.Resize((args.img_size, args.img_size)),
         transforms.Normalize(mean, std),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(),
+        # transforms.RandomHorizontalFlip(),
+        # transforms.RandomVerticalFlip(),
         # transforms.ToTensor(),
     ])
 
