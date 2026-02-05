@@ -143,8 +143,10 @@ def main_worker(args):
         config={
             "learning_rate": args.learning_rate, #todo change learning rate
             "architecture": args.model,
+            "pretrained": True,
+            "frozen": False,
             "dataset": "DLBCL",
-            "nb_channel": 14,
+            "nb_channel": 3,
             "epochs": args.epochs,
             "task": args.task,
             "batch_size": args.batch_size, #todo larger batch?
@@ -190,8 +192,8 @@ def main_worker(args):
 
     if args.model == 'resnet34':
         model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1)#, num_classes = args.num_classes)
-        for param in model.parameters():
-            param.requires_grad = False
+        # for param in model.parameters():
+        #     param.requires_grad = False
         model.fc = Linear(model.fc.in_features, args.num_classes)
         #for more channel we would need to change the first conv ->
         # model.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
@@ -302,8 +304,8 @@ def get_args():
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
-    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_hans_test.csv', help='.csv file containing the training examples')
-    parser.add_argument('--val_csv', dest='val_csv', type=str, default='train_hans_test.csv', help='.csv file containing the val examples')
+    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_hans.csv', help='.csv file containing the training examples')
+    parser.add_argument('--val_csv', dest='val_csv', type=str, default='val_hans.csv', help='.csv file containing the val examples')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
     parser.add_argument('--ip_address', dest='master_addr', type=str, default='localhost', help='IP address of rank 0 node')
     parser.add_argument('--port', dest='master_port', type=str, default='8888', help='Free port on rank 0 node')
