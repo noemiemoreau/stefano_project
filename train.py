@@ -224,7 +224,7 @@ def main_worker(args):
     train_transform = transforms.Compose([
         transforms.CenterCrop(5000),
         transforms.Resize((args.img_size, args.img_size)),
-        transforms.Normalize(mean, std),
+        # transforms.Normalize(mean, std),
         # transforms.RandomHorizontalFlip(),
         # transforms.RandomVerticalFlip(),
         # transforms.ToTensor(),
@@ -242,7 +242,7 @@ def main_worker(args):
         val_transform = transforms.Compose([
             transforms.CenterCrop(5000),
             transforms.Resize((args.img_size, args.img_size)),
-            transforms.Normalize(mean, std),
+            # transforms.Normalize(mean, std),
             #transforms.ToTensor(),
         ])
         val_df = pd.read_csv(args.val_csv)
