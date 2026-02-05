@@ -9,6 +9,7 @@ from torch.nn.parallel import DistributedDataParallel
 from torch.nn import CrossEntropyLoss, Conv2d
 from torchvision.models import resnet34
 from torchvision import transforms
+from torchvision import models
 import pandas as pd
 
 from src.utils import calculate_weights
