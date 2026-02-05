@@ -189,7 +189,8 @@ def main_worker(args):
         raise ValueError('Task should be ihc-score or her-status')
 
     if args.model == 'resnet34':
-        model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1, num_classes = args.num_classes)
+        model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1)#, num_classes = args.num_classes)
+        model.fc = nn.Linear(model.fc.in_features, args.num_classes)
         #for more channel we would need to change the first conv ->
         # model.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         model = model.cuda()
