@@ -191,6 +191,7 @@ def main_worker(args):
         raise ValueError('Task should be ihc-score or her-status')
 
     if args.model == 'resnet34':
+        # model = resnet34(weights= None, num_classes = args.num_classes)
         model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1)#, num_classes = args.num_classes)
         for param in model.parameters():
             param.requires_grad = False
@@ -304,8 +305,8 @@ def get_args():
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
-    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_hans.csv', help='.csv file containing the training examples')
-    parser.add_argument('--val_csv', dest='val_csv', type=str, default='val_hans.csv', help='.csv file containing the val examples')
+    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_hans_bis.csv', help='.csv file containing the training examples')
+    parser.add_argument('--val_csv', dest='val_csv', type=str, default='val_hans_bis.csv', help='.csv file containing the val examples')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
     parser.add_argument('--ip_address', dest='master_addr', type=str, default='localhost', help='IP address of rank 0 node')
     parser.add_argument('--port', dest='master_port', type=str, default='8888', help='Free port on rank 0 node')
