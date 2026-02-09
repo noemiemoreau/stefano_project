@@ -33,8 +33,8 @@ class ImageDataset(Dataset):
 
     def __getitem__(self, idx):
         fn = self.df.iloc[idx][self.fn_col]
-        new_filename = "/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/" + os.path.basename(fn)[0:3] + "_for_resnet.npy"
-        image = np.load(new_filename)
+        # new_filename = "/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/" + os.path.basename(fn)[0:3] + "_for_resnet.npy"
+        image = np.load(fn)
         image = image[self.which_channels, :, :]
         image = tensor(image, dtype=float32)[0]
         if self.transform != None:
