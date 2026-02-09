@@ -317,7 +317,7 @@ def get_args():
 if __name__ == '__main__':
     args = get_args()
     os.makedirs(args.checkpoints_dir, exist_ok = True)
-    os.environ['MASTER_ADDR'] = args.master_addr
-    os.environ['MASTER_PORT'] = args.master_port
+    # os.environ['MASTER_ADDR'] = args.master_addr
+    # os.environ['MASTER_PORT'] = args.master_port
     main_worker(args=args)
     # mp.spawn(main_worker, nprocs=args.gpus, args=(args,))
