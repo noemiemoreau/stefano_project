@@ -297,7 +297,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='Train HER2 overexpression classifier',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--model', dest='model', type=str, default='resnet34', help='resnet34 or abmil')
-    parser.add_argument('--task', dest='task', type=str, default='hans_binary', help='ihc-score or her2-status')
+    parser.add_argument('--task', dest='task', type=str, default='relapse', help='ihc-score or her2-status')
     parser.add_argument('--weighted_sampler_label', dest='weighted_sampler_label', type=str, default='None', help='Additional label in the train .csv to weight the sampling')
     parser.add_argument('--gpus', dest='gpus', type=int, default=4, help='Number of GPUs')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs', dest='epochs')
