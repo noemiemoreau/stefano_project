@@ -314,9 +314,9 @@ def get_args():
     parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
     parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_cleaned.csv', help='.csv file containing the training examples')
     parser.add_argument('--val_csv', dest='val_csv', type=str, default='test_cleaned.csv', help='.csv file containing the val examples')
-    parser.add_argument('--data_path', dest='data_path', type=str, default='/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/',
+    parser.add_argument('--data_path', dest='data_path', type=str, default='/projects/ag-bozek/nmoreau/dlbcl/data/normalized/',
                         help='path to the images directory')
-    parser.add_argument('--data_suffixe', dest='data_suffixe', type=str, default='_for_resnet.npy',
+    parser.add_argument('--data_suffixe', dest='data_suffixe', type=str, default='_normalized.npy',
                         help='suffixe of the image')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
     parser.add_argument('--num_workers', dest='num_workers', type=int, default=0, help='Number of workers for loading data')
