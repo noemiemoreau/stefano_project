@@ -305,7 +305,7 @@ def get_args():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--model', dest='model', type=str, default='resnet34', help='resnet34')
     parser.add_argument('--img_size', dest='img_size', type=int, default=1024, help='Input image size for the model')
-    parser.add_argument('--channels', dest='channels', type=list, default=[list(range(14))], help='number of channel (max 14)')
+    parser.add_argument('--channels', dest='channels', type=list, default=[[0,1,6]], help='number of channel (max 14)')
     parser.add_argument('--pretrained', dest='pretrained', type=bool, default=True, help='True or False')
     parser.add_argument('--frozen', dest='frozen', type=bool, default=True, help='True or False')
     parser.add_argument('--task', dest='task', type=str, default='relapse', help='relapse or hans_binary')
