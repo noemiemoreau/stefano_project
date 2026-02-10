@@ -190,7 +190,7 @@ def main_worker(args):
         raise ValueError('Task should be ihc-score or her-status')
 
     if args.model == 'abmil':
-        model = ResnetABMIL(num_channels= len(args.channels), patch_size=args.patch_size, pretrained=args.pretrained, freeze_resnet=args.frozen, num_classes = args.num_classes).cuda()
+        model = ResnetABMIL(num_channels= len(args.channels[0]), patch_size=args.patch_size, pretrained=args.pretrained, freeze_resnet=args.frozen, num_classes = args.num_classes).cuda()
     else:
         raise ValueError('Model should be resnet34 or abmil')  
 
