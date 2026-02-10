@@ -210,8 +210,8 @@ def main_worker(args):
 
     train_df = pd.read_csv(args.train_csv)
     train_dataset = ImageDataset(train_df, fn_col = 'filename', lbl_col = args.task, transform = train_transform, return_filename=True, which_channels = args.channels, data_path=args.data_path, data_suffixe=args.data_suffixe)
-    if args.weighted_sampler_label == 'None':
-        args.weighted_sampler_label = args.task
+    # if args.weighted_sampler_label == 'None':
+    #     args.weighted_sampler_label = args.task
     # weights = calculate_weights(torch.tensor(train_df[args.weighted_sampler_label].values))
     # train_sampler = DistributedWeightedSampler(weights, num_replicas=args.gpus, rank=proc_index, shuffle=True)
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True, shuffle=True)
