@@ -192,11 +192,14 @@ def main_worker(args):
 
     if args.model == 'resnet34':
         if not args.frozen and not args.pretrained:
+            print("not pretrained, not frozen")
             model = resnet34(weights= None, num_classes = args.num_classes)
         elif args.pretrained and not args.frozen:
+            print("pretrained, not frozen")
             model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1)#, num_classes = args.num_classes)
             model.fc = Linear(model.fc.in_features, args.num_classes)
         elif args.pretrained and args.frozen:
+            print("pretrained, frozen")
             model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1)#, num_classes = args.num_classes)
             for param in model.parameters():
                 param.requires_grad = False
@@ -303,7 +306,7 @@ def get_args():
     parser.add_argument('--model', dest='model', type=str, default='resnet34', help='resnet34')
     parser.add_argument('--img_size', dest='img_size', type=int, default=1024, help='Input image size for the model')
     parser.add_argument('--channels', dest='channels', type=list, default=[list(range(14))], help='number of channel (max 14)')
-    parser.add_argument('--pretrained', dest='pretrained', type=bool, default=True, help='True or False')
+    parser.add_argument('--pretrained', dest='pretrained', type=bool, default=False, help='True or False')
     parser.add_argument('--frozen', dest='frozen', type=bool, default=False, help='True or False')
     parser.add_argument('--task', dest='task', type=str, default='relapse', help='relapse or hans_binary')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs', dest='epochs')
