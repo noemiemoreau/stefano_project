@@ -41,23 +41,25 @@ class GatedAttention(nn.Module):
 
     
 class ResnetABMIL(nn.Module):
-    def __init__(self, hidden_size = 256, patch_size = 224, freeze_resnet = True, pretrained = False, progress = True, **kwargs):
+    def __init__(self, num_channels = 3, hidden_size = 256, patch_size = 224, freeze_resnet = False, pretrained = False, progress = True, num_classes = 2):
         super(ResnetABMIL, self).__init__()
 
-
-        resnet = models.resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1, progress = progress) #, **kwargs)
-        # resnet.conv1 = Conv2d(14, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-        if freeze_resnet:
+        if not pretrained and not freeze_resnet:
+            resnet = models.resnet34(weights = None, progress = progress) #, **kwargs)
+        elif pretrained and not freeze_resnet:
+            resnet = models.resnet34(weights=models.ResNet34_Weights.IMAGENET1K_V1, progress=progress)
+        elif pretrained and freeze_resnet:
             for param in resnet.parameters():
                 param.requires_grad = False
-            
+        if num_channels != 3 :
+            resnet.conv1 = Conv2d(num_channels, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         resnet_modules = list(resnet.children())
         self.patch_size = patch_size
         self.feature_extractor = nn.Sequential(*resnet_modules[:-1])
         #resnet34 last layer vectors have 512 features
         self.attention_mechanism = GatedAttention(512, hidden_size)
         #if pretrained = True the classifier is also going to be pretrained, and it only works for num_classes = 1000 (imagenet)
-        self.classifier = nn.Linear(512, kwargs.get('num_classes'))
+        self.classifier = nn.Linear(512, num_classes)
     
     def get_valid_patches(self, x):
         rand_offset = True if self.training else False
