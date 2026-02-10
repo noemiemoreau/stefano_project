@@ -152,7 +152,7 @@ def main_worker(args):
             "batch_size": args.batch_size, #todo larger batch?
             "image_size": args.img_size,
             "num_workers": args.num_workers,
-            "weight_decay": 1e-8,
+            "weight_decay": args.weight_decay,
             "scheduler_factor": args.scheduler_factor,
             "scheduler_patience": args.scheduler_patience,
             "loss": "Cross_entropy", #todo change loss
@@ -161,7 +161,9 @@ def main_worker(args):
             "shuffle": True,
             "train_set" : args.train_csv,
             "val_set" : args.val_csv,
-            "preprocessing?" : "resizing + small crop + normalized"
+            "data_path": args.data_path,
+            "data_suffixe": args.data_suffixe,
+            "preprocessing?" : "crop at 5000x5000 + resizing"
         },
     )
 
@@ -191,18 +193,20 @@ def main_worker(args):
     if args.model == 'resnet34':
         if not args.frozen and not args.pretrained:
             model = resnet34(weights= None, num_classes = args.num_classes)
-        # model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1)#, num_classes = args.num_classes)
-        # for param in model.parameters():
-        #     param.requires_grad = False
-        # model.fc = Linear(model.fc.in_features, args.num_classes)
-        #for more channel we would need to change the first conv ->
+        elif args.pretrained and not args.frozen:
+            model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1)#, num_classes = args.num_classes)
+            model.fc = Linear(model.fc.in_features, args.num_classes)
+        elif args.pretrained and args.frozen:
+            model = resnet34(weights = models.ResNet34_Weights.IMAGENET1K_V1)#, num_classes = args.num_classes)
+            for param in model.parameters():
+                param.requires_grad = False
+            model.fc = Linear(model.fc.in_features, args.num_classes)
+
         if len(args.channels[0]) != 3:
             model.conv1 = Conv2d(len(args.channels[0]), 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         model = model.cuda()
-    elif args.model == 'abmil':
-        model = ResnetABMIL(num_classes = args.num_classes).cuda()
     else:
-        raise ValueError('Model should be resnet34 or abmil')
+        raise ValueError('Model should be resnet34')
 
     # for m in model.modules():
     #     if isinstance(m, torch.nn.BatchNorm2d):
@@ -232,7 +236,7 @@ def main_worker(args):
     ])
 
     train_df = pd.read_csv(args.train_csv)
-    train_dataset = ImageDataset(train_df, fn_col = 'filename', lbl_col = args.task, transform = train_transform, return_filename=True, which_channels = args.channels)
+    train_dataset = ImageDataset(train_df, fn_col = 'filename', lbl_col = args.task, transform = train_transform, return_filename=True, which_channels = args.channels, data_path=args.data_path, data_suffixe=args.data_suffixe)
     # if args.weighted_sampler_label == 'None':
     #     args.weighted_sampler_label = args.task
     # weights = calculate_weights(torch.tensor(train_df[args.weighted_sampler_label].values))
@@ -247,11 +251,11 @@ def main_worker(args):
             #transforms.ToTensor(),
         ])
         val_df = pd.read_csv(args.val_csv)
-        val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform, return_filename=True, which_channels = args.channels)
+        val_dataset = ImageDataset(val_df, fn_col = 'filename', lbl_col = args.task, transform = val_transform, return_filename=True, which_channels = args.channels, data_path=args.data_path, data_suffixe=args.data_suffixe)
         # val_sampler = DistributedSampler(val_dataset, num_replicas=args.gpus, rank=proc_index, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
     
-    optimizer = torch.optim.Adam(model.parameters(), lr = args.learning_rate, weight_decay=1e-8)
+    optimizer = torch.optim.Adam(model.parameters(), lr = args.learning_rate, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', factor=args.scheduler_factor, patience=args.scheduler_patience, min_lr=1e-15)
 
     criterion = CrossEntropyLoss()
@@ -296,7 +300,7 @@ def main_worker(args):
 def get_args():
     parser = argparse.ArgumentParser(description='Train HER2 overexpression classifier',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--model', dest='model', type=str, default='resnet34', help='resnet34 or abmil')
+    parser.add_argument('--model', dest='model', type=str, default='resnet34', help='resnet34')
     parser.add_argument('--img_size', dest='img_size', type=int, default=1024, help='Input image size for the model')
     parser.add_argument('--channels', dest='channels', type=list, default=[list(range(14))], help='number of channel (max 14)')
     parser.add_argument('--pretrained', dest='pretrained', type=bool, default=False, help='True or False')
@@ -304,11 +308,16 @@ def get_args():
     parser.add_argument('--task', dest='task', type=str, default='relapse', help='relapse or hans_binary')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs', dest='epochs')
     parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.001, help='Learning rate')
+    parser.add_argument('--weight_decay', dest="weight_decay", type=float, nargs='?', default=1e-8, help='weight_decay')
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=4, help='Batch size', dest='batch_size')
     parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_cleaned.csv', help='.csv file containing the training examples')
     parser.add_argument('--val_csv', dest='val_csv', type=str, default='test_cleaned.csv', help='.csv file containing the val examples')
+    parser.add_argument('--data_path', dest='data_path', type=str, default='/projects/ag-bozek/sugliano/dlbcl/data/interim/resnet_imgs/',
+                        help='path to the images directory')
+    parser.add_argument('--data_suffixe', dest='data_suffixe', type=str, default='_for_resnet.npy',
+                        help='suffixe of the image')
     parser.add_argument('--checkpoints_dir', dest='checkpoints_dir', type=str, default='./checkpoints', help='Path to save model checkpoints')
     parser.add_argument('--num_workers', dest='num_workers', type=int, default=0, help='Number of workers for loading data')
     return parser.parse_args()
