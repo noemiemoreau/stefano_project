@@ -274,7 +274,7 @@ def get_args():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--model', dest='model', type=str, default='abmil', help='abmil')
     parser.add_argument('--patch_size', dest='patch_size', type=int, default=224, help='patch_size')
-    parser.add_argument('--channels', dest='channels', type=list, default=[list(range(14))], help='number of channel (max 14)')
+    parser.add_argument('--channels', dest='channels', type=list, default=[[0,1,6]], help='number of channel (max 14)')
     parser.add_argument('--pretrained', dest='pretrained', type=bool, default=True, help='True or False')
     parser.add_argument('--frozen', dest='frozen', type=bool, default=True, help='True or False')
     parser.add_argument('--task', dest='task', type=str, default='relapse', help='relapse or hans_binary')
