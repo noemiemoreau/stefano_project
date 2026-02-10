@@ -52,6 +52,7 @@ class ResnetABMIL(nn.Module):
             resnet = models.resnet34(weights=models.ResNet34_Weights.IMAGENET1K_V1, progress=progress)
         elif pretrained and freeze_resnet:
             print("pretrained, frozen")
+            resnet = models.resnet34(weights=models.ResNet34_Weights.IMAGENET1K_V1, progress=progress)
             for param in resnet.parameters():
                 param.requires_grad = False
         if num_channels != 3 :
