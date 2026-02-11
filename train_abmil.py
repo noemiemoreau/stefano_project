@@ -277,15 +277,15 @@ def get_args():
     parser.add_argument('--channels', dest='channels', type=list, default=[list(range(14))], help='number of channel (max 14)')
     parser.add_argument('--pretrained', dest='pretrained', type=bool, default=True, help='True or False')
     parser.add_argument('--frozen', dest='frozen', type=bool, default=False, help='True or False')
-    parser.add_argument('--task', dest='task', type=str, default='relapse', help='relapse or hans_binary')
+    parser.add_argument('--task', dest='task', type=str, default='hans_binary', help='relapse or hans_binary')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs', dest='epochs')
     parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.0001, help='Learning rate')
     parser.add_argument('--weight_decay', dest="weight_decay", type=float, nargs='?', default=1e-8, help='weight_decay')
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
     parser.add_argument('--batch_size', type=int, nargs='?', default=1, help='Batch size', dest='batch_size')
-    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_cleaned.csv', help='.csv file containing the training examples')
-    parser.add_argument('--val_csv', dest='val_csv', type=str, default='test_cleaned.csv', help='.csv file containing the val examples')
+    parser.add_argument('--train_csv', dest='train_csv', type=str, default='train_hans.csv', help='.csv file containing the training examples')
+    parser.add_argument('--val_csv', dest='val_csv', type=str, default='val_hans.csv', help='.csv file containing the val examples')
     parser.add_argument('--data_path', dest='data_path', type=str, default='/projects/ag-bozek/nmoreau/dlbcl/data/normalized/',
                         help='path to the images directory')
     parser.add_argument('--data_suffixe', dest='data_suffixe', type=str, default='_normalized.npy',
