@@ -310,7 +310,7 @@ def get_args():
     parser.add_argument('--frozen', dest='frozen', type=bool, default=False, help='True or False')
     parser.add_argument('--task', dest='task', type=str, default='hans_binary', help='relapse or hans_binary')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs', dest='epochs')
-    parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.001, help='Learning rate')
+    parser.add_argument('--learning_rate', dest="learning_rate", type=float, nargs='?', default=0.0001, help='Learning rate')
     parser.add_argument('--weight_decay', dest="weight_decay", type=float, nargs='?', default=1e-8, help='weight_decay')
     parser.add_argument('--scheduler_factor', dest="scheduler_factor", type=float, nargs='?', default=0.1, help='Scheduler factor for decreasing learning rate')
     parser.add_argument('--scheduler_patience', dest="scheduler_patience", type=int, nargs='?', default=10, help='Scheduler patience for decreasing learning rate')
