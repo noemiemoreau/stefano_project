@@ -145,12 +145,13 @@ def main_worker(args):
 
     os.makedirs(os.path.join(args.checkpoints_dir,run.id))
 
+    # To adapt for your experiments
     if args.task == 'relapse':
         args.num_classes = 2
     elif args.task == 'hans_binary':
         args.num_classes = 2
     else:
-        raise ValueError('Task should be ihc-score or her-status')
+        raise ValueError('Task should be relapse or hans_binary')
 
     if args.model == 'resnet34':
         if not args.frozen and not args.pretrained:
@@ -174,7 +175,7 @@ def main_worker(args):
         raise ValueError('Model should be resnet34')
 
     train_transform = transforms.Compose([
-        transforms.CenterCrop(5000),
+        transforms.CenterCrop(5000), # if all your images have the same size already, this crop may not be necessary
         transforms.Resize((args.img_size, args.img_size)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
